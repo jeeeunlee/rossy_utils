@@ -11,7 +11,7 @@ add_subdirectory(thirdparty/clp)
 FILE(GLOB_RECURSE sources "*.cpp")
 FILE(GLOB general_headers "General/*.hpp")
 FILE(GLOB io_headers "rossy_utils/IO/*.hpp")
-FILE(GLOB math_headers "Math/*.hpp" "*.h")
+FILE(GLOB math_headers "math/*.hpp" "*.h")
 
 add_library(rossy_utils SHARED  ${sources} ${general_headers} ${io_headers} ${math_headers})
 target_link_libraries(rossy_utils yamlwrapper clpwrapper ${EIGEN_LIBRARIES} ${libCoinUtils} ${libClp})
@@ -20,7 +20,10 @@ target_include_directories(rossy_utils PUBLIC
                       ${EIGEN3_INCLUDE_DIR} 
                       ${THIRDPARTY_INCLUDE_DIR} )
 
-SET (THIS_COM ${CMAKE_SOURCE_DIR}/../ )
+message(status ${CMAKE_SOURCE_DIR})
+message(status ${PROJECT_SOURCE_DIR})
+
+SET (THIS_COM ${CMAKE_SOURCE_DIR}/ )
 CONFIGURE_FILE(${PROJECT_SOURCE_DIR}/config.h.cmake ${PROJECT_SOURCE_DIR}/Configuration.h)
 
 

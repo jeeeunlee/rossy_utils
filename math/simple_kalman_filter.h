@@ -3,7 +3,7 @@
 #define SIMPLE_KALMAN_FILTER
 
 #include <Eigen/Dense>
-#include "Math/pseudo_inverse.hpp"
+#include "math/pseudo_inverse.hpp"
 #include <deque>
 
 class SimpleSystemParam{
