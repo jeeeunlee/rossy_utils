@@ -107,6 +107,13 @@ double TOPPSplines::getPeroid() {
         return 0.;
 }
 
+void TOPPSplines::getPeroids(std::vector<double> &_ts) {
+    if(computed)
+        _ts = ts;
+    else
+        _ts.clear();
+}
+
 double TOPPSplines::evaluate(const double & t_in) {
     if(!computed) compute();
     int i = evaluateTimeInterval(t_in);

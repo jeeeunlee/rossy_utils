@@ -24,6 +24,7 @@ class TOPPSplines{
     void check();
 
     double getPeroid();
+    void getPeroids(std::vector<double> &_ts) ;
     
     double evaluate(const double & t_in);
     double evaluateFirstDerivative(const double & t_in);

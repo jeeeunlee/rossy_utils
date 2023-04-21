@@ -23,6 +23,7 @@ Eigen::MatrixXd deleteRow(const Eigen::MatrixXd& a_, int row);
 Eigen::VectorXd MatrixtoVector(const Eigen::MatrixXd& a);
 Eigen::MatrixXd VectortoMatrix(const Eigen::VectorXd& a, int dim);
 Eigen::VectorXd vector2EigenVector(const std::vector<double>& vec, int k, int l);
+Eigen::VectorXd vector2EigenVector(const std::vector<double>& vec);
 
 // void hStackConserve(Eigen::MatrixXd& a, const Eigen::MatrixXd& b);
 // void hStackConserve(Eigen::VectorXd& a_, const Eigen::VectorXd& b_);

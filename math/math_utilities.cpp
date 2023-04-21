@@ -119,6 +119,10 @@ Eigen::VectorXd vector2EigenVector(const std::vector<double>& vec, int k, int l)
     return ret;
 }
 
+Eigen::VectorXd vector2EigenVector(const std::vector<double>& vec){
+    return vector2EigenVector(vec,0,vec.size());
+}
+
 Eigen::MatrixXd deleteRow(const Eigen::MatrixXd& a_, int row_) {
     Eigen::MatrixXd ret = Eigen::MatrixXd::Zero(a_.rows() - 1, a_.cols());
     ret.block(0, 0, row_, a_.cols()) = a_.block(0, 0, row_, a_.cols());
