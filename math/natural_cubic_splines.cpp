@@ -36,6 +36,9 @@ void NaturalCubicSplines::compute(){
     case SplineType::ZEROVEL:
         computeZeroVelClamped();
         break;
+    case SplineType::OPT:
+        computeOpt();
+        break;
     default:
         computeNatural();
         break;
@@ -43,6 +46,57 @@ void NaturalCubicSplines::compute(){
     
 }
 
+void NaturalCubicSplines::computeOpt(){
+    // way pnts except current point (min=1)
+    n_wpts = ys.size() -1; 
+
+    // build hs && compute zs
+    hs.resize(n_wpts);
+    for(int i(0); i<n_wpts; ++i)
+        hs[i] = ts[i+1] - ts[i];
+    
+    // build the triagonal system
+    std::vector<double> bs(n_wpts);
+   
+    for(int i(0); i<n_wpts; ++i)
+        bs[i] = (ys[i+1] - ys[i])/hs[i];    
+
+
+    Eigen::VectorXd u = Eigen::VectorXd::Zero(n_wpts-1);
+    Eigen::VectorXd z = Eigen::VectorXd::Zero(n_wpts+1);
+    Eigen::MatrixXd A = Eigen::MatrixXd::Zero(n_wpts-1, n_wpts+1);    
+    for(int i(0); i<n_wpts-1; ++i){
+        u(i) = 6.0*(bs[i+1]-bs[i]);
+        A(i,i+1) = 2.*(hs[i+1] + hs[i]);
+    }
+    for(int i(0); i<n_wpts-1; ++i){
+        A(i,i) = hs[i];
+        A(i,i+2) = hs[i+1];
+    }
+
+    Eigen::MatrixXd W = Eigen::MatrixXd::Identity(n_wpts+1, n_wpts+1);  
+    // for(int i(1); i<n_wpts+1; ++i){
+    //     W(i-1,i) = -1.;
+    //     W(i,i-1) = -1.;
+    // }
+    // solve the triagonal system (Az = u)
+    // todo: impelment triagonal system solution  
+    Eigen::MatrixXd AWAT = A*W*A.transpose();
+    z = AWAT.ldlt().solve(u);
+    // z = AAT.fullPivHouseholderQr().solve(u);
+    z = W*A.transpose()*z;
+
+    // Eigen::VectorXd udiff= A*z - u;
+    // rossy_utils::pretty_print(udiff, std::cout, "udiff");
+
+    // build zs
+    zs.resize(n_wpts+1);    
+    for(int i(0); i<n_wpts+1; ++i)
+        zs[i] = z(i);
+
+    // std::cout<<"zs : done" <<std::endl;
+    computed = true;
+}
 
 void NaturalCubicSplines::computeZeroVelClamped(){
 // way pnts except current point (min=1)
