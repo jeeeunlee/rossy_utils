@@ -22,6 +22,8 @@ target_include_directories(yamlwrapper PUBLIC
                           ${EIGEN3_INCLUDE_DIR}
                           ${PROJECT_INCLUDE_DIR} )
 
+install(TARGETS yamlwrapper DESTINATION "${INSTALL_SHAREDLIB_DIR}")
+
 # install(TARGETS yaml DESTINATION "${INSTALL_LIB_DIR}")
 # install(FILES ${yaml_headers} DESTINATION
 #     "${INSTALL_INCLUDE_DIR}/ExternalSource/yaml/include/yaml")

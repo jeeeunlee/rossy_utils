@@ -6,8 +6,9 @@
 #include <algorithm>
 #include <list>
 #include <Eigen/Dense>
-#include "../Configuration.h"
 #include <yaml/yaml.h>
+
+# define THIS_COM "~/dexrobo/customer/fedex/"
 
 enum myColor {
     Red=0,

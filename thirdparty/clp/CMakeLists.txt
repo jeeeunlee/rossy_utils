@@ -19,3 +19,5 @@ target_link_libraries(clpwrapper)
 target_include_directories(clpwrapper PUBLIC
             ${EIGEN3_INCLUDE_DIR}
             ${PROJECT_SOURCE_DIR} )
+
+install(TARGETS clpwrapper DESTINATION "${INSTALL_SHAREDLIB_DIR}")
