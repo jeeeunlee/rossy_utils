@@ -8,7 +8,7 @@
 #include <Eigen/Dense>
 #include <yaml/yaml.h>
 
-# define THIS_COM "~/dexrobo/customer/fedex/"
+#define THIS_COM "/var/log/dex/dhc_data/"
 
 enum myColor {
     Red=0,
