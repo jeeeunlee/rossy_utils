@@ -182,6 +182,17 @@ Eigen::MatrixXd deleteRow(const Eigen::MatrixXd& a_, int row_) {
 // }
 
 
+double getMaxRatioValue(
+    const Eigen::VectorXd& val,
+    const Eigen::VectorXd& max){
+    assert(val.size()==max.size());
+    double maxratio = 0.;
+    for(int i(0); i<val.size(); ++i){
+        maxratio = std::max(maxratio, abs(val(i)/max(i)));
+    }
+    return maxratio;
+}    
+
 
 Eigen::Vector3d convertQuatToExp(const Eigen::Quaterniond& q){
     Eigen::AngleAxisd aa = Eigen::AngleAxisd(q);

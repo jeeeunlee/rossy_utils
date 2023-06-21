@@ -12,13 +12,15 @@ NaturalCubicSplines::NaturalCubicSplines(){
 void NaturalCubicSplines::initialize(){
     computed = false;
     ts.clear();
-    ys.clear();    
+    ys.clear();
+    n_wpts = 0;    
 }
 
 void NaturalCubicSplines::push_back(double t, double y){
     computed=false;
     ts.push_back(t);
     ys.push_back(y);
+    ++n_wpts;
 }
 
 void NaturalCubicSplines::compute(){
@@ -328,12 +330,21 @@ double NaturalCubicSplines::evaluateFirstDerivative(const double & t_in){
     if(!computed) compute();
 
     int i = evaluateTimeInterval(t_in);
-    if(i<0) i=0;
-    else if(i<n_wpts){}
-    else i=n_wpts-1;
-
-    double t1 = (t_in - ts[i]);
-    double t2 = (ts[i+1] - t_in);
+    double t1,t2;
+    if(i<0) {
+        i=0;
+        t1 = 0.;
+        t2 = ts[i+1] - ts[i] - t1;
+    }
+    else if(i<n_wpts){
+        t1 = (t_in - ts[i]);
+        t2 = (ts[i+1] - t_in);
+    }
+    else {
+        i=n_wpts-1;        
+        t2 = 0.;
+        t1 = ts[i+1] - ts[i] - t2;
+    }
     sdot = (zs[i+1]*t1*t1)/(2.*hs[i]) 
         - (zs[i]*t2*t2)/(2.*hs[i]) 
         + (ys[i+1]/hs[i] - zs[i+1]/6.*hs[i]) 
@@ -345,12 +356,23 @@ double NaturalCubicSplines::evaluateSecondDerivative(const double & t_in){
     if(!computed) compute();
     
     int i = evaluateTimeInterval(t_in);
-    if(i<0) i=0;
-    else if(i<n_wpts){}
-    else i=n_wpts-1;
+    double t1,t2;
+    if(i<0) {
+        i=0;
+        t1 = 0.;
+        t2 = ts[i+1] - ts[i] - t1;
+    }
+    else if(i<n_wpts){
+        t1 = (t_in - ts[i]);
+        t2 = (ts[i+1] - t_in);
+    }
+    else {
+        i=n_wpts-1;        
+        t2 = 0.;
+        t1 = ts[i+1] - ts[i] - t2;
+    }
 
-    double t1 = (t_in - ts[i]);
-    double t2 = (ts[i+1] - t_in);
+    
     sddot = (zs[i+1]*t1)/(hs[i]) 
             + (zs[i]*t2)/(hs[i]);
     return sddot;
@@ -384,6 +406,7 @@ void NCSpln4Vec::initialize(int _dim){
         curves[i].initialize();
     }
     output = Eigen::VectorXd::Zero(dim);
+    n_wpts = 0;
 }
 void NCSpln4Vec::push_back(double t, Eigen::VectorXd Y){
     assert(Y.size() == dim);
@@ -391,6 +414,7 @@ void NCSpln4Vec::push_back(double t, Eigen::VectorXd Y){
     for(int i(0); i<dim; ++i){
         curves[i].push_back(t, Y(i));
     }
+    ++n_wpts;
 }
 void NCSpln4Vec::compute(){
     computed = true;
@@ -419,6 +443,9 @@ Eigen::VectorXd NCSpln4Vec::evaluateSecondDerivative(const double & t_in){
     return output;
 }
 
+int NCSpln4Vec::evaluateTimeInterval(const double & t_in){
+    return curves[0].evaluateSecondDerivative(t_in);
+}
 
 /// -----------------------------------------
 // 좀 생각해봐야겟다

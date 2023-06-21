@@ -35,8 +35,8 @@ void TOPPSplines::compute() {
     for(int i(0); i<n_wpts; ++i){
         // solve a*dt^2 + b*dt + c=0
         a = (us[i]-us[i+1])/6.;
-        b = vs[i]+vs[i+1];
-        c = 2.*(ss[i]-ss[i+1]); // -2ds
+        b = vs[i]+vs[i+1]; // > 0
+        c = 2.*(ss[i]-ss[i+1]); // -2ds < 0
 
         double detm = b*b-4.*a*c;
         double ZCE = 1e-5;
@@ -82,22 +82,31 @@ void TOPPSplines::check(){
     if(!computed) return;
 
     std::cout<<" ---TOPPSplines : total period = "<< ts[n_wpts]<<std::endl;
-    int i=0;
-    for(auto &t : ts){
-        rossy_utils::saveValue(t, "ts");
+    // int i=0;
+    // for(auto &t : ts){
+    //     rossy_utils::saveValue(t, "ts");
 
-        double s = evaluate(t);
-        std::cout<<"s("<<t<<") = "<<s<<", ";
-        s=evaluateFirstDerivative(t);
+    //     double s = evaluate(t);
+    //     std::cout<<"s("<<t<<") = "<<s<<", ";
+    //     s=evaluateFirstDerivative(t);
         
-        // std::cout<<"ds = "<<s<<", v["<<i<<"]="<<vs[i]<<", ";
-        std::cout<<"v["<<i<<"]="<<vs[i]<<", ";
+    //     // std::cout<<"ds = "<<s<<", v["<<i<<"]="<<vs[i]<<", ";
+    //     std::cout<<"v["<<i<<"]="<<vs[i]<<", ";
 
-        s=evaluateSecondDerivative(t);
-        // std::cout<<"dds = "<<s<<", u["<<i<<"]="<<us[i]<<std::endl;
-        std::cout<<"u["<<i<<"]="<<us[i]<<std::endl;
-        i++;
-    }    
+    //     s=evaluateSecondDerivative(t);
+    //     // std::cout<<"dds = "<<s<<", u["<<i<<"]="<<us[i]<<std::endl;
+    //     std::cout<<"u["<<i<<"]="<<us[i]<<std::endl;
+    //     i++;
+    // }  
+    rossy_utils::pretty_print(ts,"\nts");
+    rossy_utils::pretty_print(ss,"\nss");
+    rossy_utils::pretty_print(vs,"\nvs");
+    rossy_utils::pretty_print(us,"\nus");
+
+    rossy_utils::saveVector(ts, "dhc_data/ts");
+    rossy_utils::saveVector(ss, "dhc_data/ss");
+    rossy_utils::saveVector(vs, "dhc_data/vs");
+    rossy_utils::saveVector(us, "dhc_data/us");
 }
 
 double TOPPSplines::getPeroid() {

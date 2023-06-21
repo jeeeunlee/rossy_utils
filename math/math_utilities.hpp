@@ -31,6 +31,8 @@ Eigen::VectorXd vector2EigenVector(const std::vector<double>& vec);
 // void vStackConserve(Eigen::VectorXd& a, const Eigen::VectorXd& b);
 // void dStackConserve(Eigen::MatrixXd& a, const Eigen::MatrixXd& b);
 
+double getMaxRatioValue(const Eigen::VectorXd& val, const Eigen::VectorXd& max);
+
 Eigen::Vector3d convertQuatToExp(const Eigen::Quaterniond& q);
 Eigen::VectorXd convertQuatDesToOriDes(const Eigen::Quaterniond& quat_in);
 void convertQuatDesToOriDes(const Eigen::Quaterniond& quat_in,  

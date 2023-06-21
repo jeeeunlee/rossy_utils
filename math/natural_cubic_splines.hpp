@@ -24,6 +24,7 @@ class NaturalCubicSplines{
     void setType(const SplineType& type){
       cubic_spline_type=type;
     }
+    int getNumWpts(){return n_wpts;}
     
 
     double evaluate(const double & t_in);
@@ -59,13 +60,17 @@ class NCSpln4Vec{
     void setType(const SplineType& type){
       for(auto& crv: curves) crv.setType(type);
     }
+    int getDim(){return dim;}
+    int getNumWpts(){return n_wpts;}
 
     Eigen::VectorXd evaluate(const double & t_in);
     Eigen::VectorXd evaluateFirstDerivative(const double & t_in);
     Eigen::VectorXd evaluateSecondDerivative(const double & t_in);
+    int evaluateTimeInterval(const double & t_in);
 
 private:
     int dim; // dim of vector
+    int n_wpts; // num of waypoints
     std::vector<NaturalCubicSplines> curves;
     bool computed;
     Eigen::VectorXd output;    

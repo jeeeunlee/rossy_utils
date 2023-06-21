@@ -2,7 +2,6 @@
 
 
 LPSolver::LPSolver() {
-
     ClpSimplex model;
 
     // Create model
