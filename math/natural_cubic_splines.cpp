@@ -444,7 +444,7 @@ Eigen::VectorXd NCSpln4Vec::evaluateSecondDerivative(const double & t_in){
 }
 
 int NCSpln4Vec::evaluateTimeInterval(const double & t_in){
-    return curves[0].evaluateSecondDerivative(t_in);
+    return curves[0].evaluateTimeInterval(t_in);
 }
 
 /// -----------------------------------------
