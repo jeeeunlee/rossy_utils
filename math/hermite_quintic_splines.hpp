@@ -29,10 +29,7 @@ class HermiteQuinticSplines{
     std::vector<double> ddys; // waypoints
     int n_wpts; // # of waypoints  
 
-    std::vector<double> v0s;
-    std::vector<double> v1s;
-    std::vector<double> a0s; 
-    std::vector<double> a1s; 
+    std::vector<Eigen::VectorXd> coeffs;
 
     bool computed;
 
@@ -54,7 +51,7 @@ class HQSpln4Vec{
     Eigen::VectorXd evaluate(const double & t_in);
     Eigen::VectorXd evaluateFirstDerivative(const double & t_in);
     Eigen::VectorXd evaluateSecondDerivative(const double & t_in);
-
+    int evaluateTimeInterval(const double & t_in);
 private:
     int dim; // dim of vector
     std::vector<HermiteQuinticSplines> curves;

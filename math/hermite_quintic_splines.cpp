@@ -30,23 +30,27 @@ void HermiteQuinticSplines::push_back(double t,
 // Hermite basis functions
 // p(t) = p0
 void HermiteQuinticSplines::compute(){
-    // ts.size()=(n_wpts+1)
+
     n_wpts = ts.size()-1;
+    coeffs.clear();
 
-    v0s.clear();
-    v1s.clear();
-    a0s.clear();
-    a1s.clear();
-
+    Eigen::MatrixXd H {
+        {1., 0., 0., -10., 15., -6.},
+        {0., 1., 0., -6., 8., -3.},
+        {0., 0., 0.5, -1.5, 1.5, -0.5},
+        {0., 0., 0., 0.5, -1., 0.5},
+        {0., 0., 0., -4., 7., -3.},
+        {0., 0., 0., 10., -15., 6.0}};
+    Eigen::VectorXd ci, tmp;
     double tk;
     for(int i(0); i<n_wpts; ++i){
         tk = ts[i+1] - ts[i];
-        v0s.push_back(dys[i]*tk);
-        v1s.push_back(dys[i+1]*tk);
-        a0s.push_back(ddys[i]*tk*tk);
-        a1s.push_back(ddys[i+1]*tk*tk);
-    }
-    
+        tmp = Eigen::VectorXd::Zero(6);
+        tmp << ys[i], dys[i]*tk, ddys[i]*tk*tk, 
+            ddys[i+1]*tk*tk, dys[i+1]*tk, ys[i+1];
+        ci = H.transpose()*tmp;        
+        coeffs.push_back(ci);
+    }    
 
     computed=true;
 }
@@ -55,16 +59,11 @@ double HermiteQuinticSplines::evaluate(const double & t_in){
     if(!computed) compute();
     int i = evaluateTimeInterval(t_in);
     if(i<0) return ys[0];    
-    else if(i<n_wpts){
+    else if(i<n_wpts){        
         double t = (t_in - ts[i])/(ts[i+1] - ts[i]);
-        double h0 = 1. - 10.* t*t*t + 15.*t*t*t*t - 6.*t*t*t*t*t;
-        double h1 = t - 6.*t*t*t + 8.*t*t*t*t - 3.*t*t*t*t*t;
-        double h2 = 0.5*t*t - 1.5*t*t*t + 1.5*t*t*t*t - 0.5*t*t*t*t*t;
-        double h3 = 0.5*t*t*t - 4.*t*t*t*t + 0.5*t*t*t*t*t;
-        double h4 = -4.*t*t*t + 7.*t*t*t*t - 3.*t*t*t*t*t;
-        double h5 = 10.*t*t*t - 15.*t*t*t*t + 6.*t*t*t*t*t;
-        double s = ys[i]*h0 + v0s[i]*h1 + a0s[i]*h2 
-            + a1s[i]*h3  + v1s[i]*h4 + ys[i+1]*h5;
+        Eigen::VectorXd ts = Eigen::VectorXd::Zero(6);
+        ts << 1, t, t*t, t*t*t, t*t*t*t, t*t*t*t*t;
+        double s = coeffs[i].transpose()*ts;        
         return s;        
     }
     else return ys[n_wpts];
@@ -74,25 +73,35 @@ double HermiteQuinticSplines::evaluateFirstDerivative(const double & t_in){
     if(!computed) compute();
 
     int i = evaluateTimeInterval(t_in);
-    if(i<0) i=0;
-    else if(i<n_wpts){}
-    else i=n_wpts-1;
+    if(i<0) return 0.;
+    else if(i<n_wpts){
+        double dtinv = 1./(ts[i+1] - ts[i]);
+        double t = (t_in - ts[i])/(ts[i+1] - ts[i]);          
+        Eigen::VectorXd ts = Eigen::VectorXd::Zero(6);
+        ts << 0., 1., 2.*t, 3.*t*t, 4.*t*t*t, 5.*t*t*t*t;
+        double sdot = (coeffs[i].transpose())*ts;
 
-    double t = (t_in - ts[i])/(ts[i+1] - ts[i]);
-    double sdot = 0.; // todo
-    return sdot;     
+        return dtinv*sdot; 
+          
+    }
+    else return 0.;    
 }
 
 double HermiteQuinticSplines::evaluateSecondDerivative(const double & t_in){
     if(!computed) compute();
     
     int i = evaluateTimeInterval(t_in);
-    if(i<0) i=0;
-    else if(i<n_wpts){}
-    else i=n_wpts-1;
-    double t = (t_in - ts[i])/(ts[i+1] - ts[i]);
-    double sddot = 0.; // todo
-    return sddot;
+    if(i<0) return 0.;
+    else if(i<n_wpts){
+        double dtinv = 1./(ts[i+1] - ts[i]);
+        double t = (t_in - ts[i])/(ts[i+1] - ts[i]);
+        Eigen::VectorXd ts = Eigen::VectorXd::Zero(6);
+        ts << 0., 0., 2., 6.*t, 12.*t*t, 20.*t*t*t;
+        double sddot = (coeffs[i].transpose())*ts;
+        return dtinv*dtinv*sddot;
+    }
+    else return 0.;  
+    
 }
 
 int HermiteQuinticSplines::evaluateTimeInterval(const double & t_in){    
@@ -139,6 +148,10 @@ void HQSpln4Vec::compute(){
     computed = true;
     for(int i(0); i<dim; ++i)
         curves[i].compute();
+}
+
+int HQSpln4Vec::evaluateTimeInterval(const double & t_in){
+    return curves[0].evaluateTimeInterval(t_in);
 }
 
 Eigen::VectorXd HQSpln4Vec::evaluate(const double & t_in){
