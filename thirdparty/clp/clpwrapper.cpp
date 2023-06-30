@@ -33,6 +33,7 @@ double LPSolver::solve(const Eigen::VectorXd &f,
 
     // solve problem
     model_->primal();
+    // model_->dual();
 
     // get pointer to solution
     int nc = model_->getNumCols();
@@ -55,7 +56,8 @@ double LPSolver::solve(const Eigen::VectorXd &f,
     model_->loadProblem(Amat, NULL, NULL, obj, NULL, rowub);
 
     // solve problem
-    model_->primal();
+    // model_->primal();
+    model_->dual();
 
     // get pointer to solution
     int nc = model_->getNumCols();    
@@ -67,11 +69,16 @@ double LPSolver::solve(const Eigen::VectorXd &f,
 }
 
 CoinPackedMatrix LPSolver::from_EigenMatrix(const Eigen::MatrixXd& emat){
-
     int numels=emat.rows()*emat.cols();
-    int rowIndices[numels];
-    int colIndices[numels];
-    double elements[numels];
+    int *rowIndices = (int*)malloc(numels * sizeof(int));
+    int *colIndices = (int*)malloc(numels * sizeof(int));
+    double *elements = (double*)malloc(numels * sizeof(double));
+    if (rowIndices == NULL || 
+        colIndices == NULL ||
+        elements == NULL) {
+        printf("Memory not allocated.\n");
+        exit(0);
+    }
     int i(0);
     for(int r(0); r<emat.rows(); ++r){
         for(int c(0); c<emat.cols(); ++c){            
@@ -80,20 +87,11 @@ CoinPackedMatrix LPSolver::from_EigenMatrix(const Eigen::MatrixXd& emat){
             elements[i] = emat(r,c);
             i++;
         }
-    }
-
-    // just for check    
-    // CoinPackedMatrix ret = CoinPackedMatrix(false, rowIndices, colIndices, elements, numels);
-    // int checkrow[5] = {1,2,3,4,5};
-    // int checkcol[5] = {1,2,3,4,5};
-    // for(auto &r: checkrow){
-    //     for(auto &c: checkcol){
-    //         std::cout <<"eigen val = "<< emat(r,c)<<", ";
-    //         ret.printMatrixElement(r,c);
-    //         std::cout << std::endl;
-    //     }
-    // }
-    // return ret;
-
-    return CoinPackedMatrix(false, rowIndices, colIndices, elements, numels);
+    }  
+    CoinPackedMatrix ret = CoinPackedMatrix(
+        false, rowIndices, colIndices, elements, numels);
+    free(rowIndices);
+    free(colIndices);
+    free(elements);
+    return ret;
 }
