@@ -5,7 +5,7 @@
 
 // natural : ZEROACC for cubic, ZEROJERK for quartic
 enum SplineType{ NATURAL, // cubic, quartic
-                SAMEJERK, // cubic
+                SAMEJERK, // [not-a-knot] cubic
                 SAMEACC, // cubic
                 ZEROVEL, // cubic
                 OPT // quartic

@@ -22,61 +22,85 @@ void TOPPSplines::push_back(double s, double x, double u) {
     us.push_back(u);
 }
 
+
 void TOPPSplines::compute() {
     // way pnts except current point (min=1)
     n_wpts = ss.size() -1; 
 
     // get dt
-    double a,b,c, dt;    
+    double t(0.), dt, ds;    
     as.resize(n_wpts);
     bs.resize(n_wpts);
     ts.resize(n_wpts+1);
-    ts[0] = 0.;
+    ts[0] = t;
     for(int i(0); i<n_wpts; ++i){
-        // solve a*dt^2 + b*dt + c=0
-        a = (us[i]-us[i+1])/6.;
-        b = vs[i]+vs[i+1]; // > 0
-        c = 2.*(ss[i]-ss[i+1]); // -2ds < 0
+        as[i]=0.;
+        bs[i]=0.;
 
-        double detm = b*b-4.*a*c;
-        double ZCE = 1e-5;
-        // exceptional case: 
-        // (i) a = 0, (ii) b2-4ac < 0        
-        if(a<ZCE){
-            dt = -c/b;
-            as[i] = ( - (2*us[i]+us[i+1])*dt/3.
-                    + vs[i+1] - vs[i] )/dt/dt;
-            bs[i] = ( (us[i]+us[i+1])*dt/2. 
-                    - vs[i+1]+vs[i] )/2./dt/dt/dt;
-        }
-        else if(detm < 0){
-            a = us[i]/6.;
-            b = 2./3.*vs[i] + 1./3.*vs[i+1];
-            c = (ss[i]-ss[i+1]); // -ds
-            if( a < ZCE ){
-                dt = -c/b;
-                as[i] = (-us[i]*dt+vs[i+1]-vs[i])/3./dt/dt;
-                bs[i] = 0.;
-            }else{
-                detm = b*b-4.*a*c;
-                dt = (-b + sqrt(detm))/2./a;
-                as[i] = (-us[i]*dt+vs[i+1]-vs[i])/3./dt/dt;
-                bs[i] = 0.;                
-            }
-        }
-        else{
-            dt = (-b + sqrt(detm))/2./a;
-            as[i] = ( -(2.*us[i] + us[i+1])*dt/3. 
-                    + vs[i+1]-vs[i] )/dt/dt;
-            bs[i] = ( (us[i]+us[i+1])*dt/2. 
-                    - vs[i+1]+vs[i] )/2./dt/dt/dt;
-        }
-        
-        ts[i+1] = ts[i] + dt;
+        ds = 2.*(ss[i+1]-ss[i]);
+        dt = ds/(vs[i]+vs[i+1]);
+
+        t += dt;
+        ts[i+1] = t;
     }
-
     computed = true;
 }
+
+// void TOPPSplines::compute() {
+//     // way pnts except current point (min=1)
+//     n_wpts = ss.size() -1; 
+
+//     // get dt
+//     double a,b,c, dt;    
+//     as.resize(n_wpts);
+//     bs.resize(n_wpts);
+//     ts.resize(n_wpts+1);
+//     ts[0] = 0.;
+//     for(int i(0); i<n_wpts; ++i){
+//         // solve a*dt^2 + b*dt + c=0
+//         a = (us[i]-us[i+1])/6.;
+//         b = vs[i]+vs[i+1]; // > 0
+//         c = 2.*(ss[i]-ss[i+1]); // -2ds < 0
+
+//         double detm = b*b-4.*a*c;
+//         double ZCE = 1e-5;
+//         // exceptional case: 
+//         // (i) a = 0, (ii) b2-4ac < 0        
+//         if(a<ZCE){
+//             dt = -c/b;
+//             as[i] = ( - (2*us[i]+us[i+1])*dt/3.
+//                     + vs[i+1] - vs[i] )/dt/dt;
+//             bs[i] = ( (us[i]+us[i+1])*dt/2. 
+//                     - vs[i+1]+vs[i] )/2./dt/dt/dt;
+//         }
+//         else if(detm < 0){
+//             a = us[i]/6.;
+//             b = 2./3.*vs[i] + 1./3.*vs[i+1];
+//             c = (ss[i]-ss[i+1]); // -ds
+//             if( a < ZCE ){
+//                 dt = -c/b;
+//                 as[i] = (-us[i]*dt+vs[i+1]-vs[i])/3./dt/dt;
+//                 bs[i] = 0.;
+//             }else{
+//                 detm = b*b-4.*a*c;
+//                 dt = (-b + sqrt(detm))/2./a;
+//                 as[i] = (-us[i]*dt+vs[i+1]-vs[i])/3./dt/dt;
+//                 bs[i] = 0.;                
+//             }
+//         }
+//         else{
+//             dt = (-b + sqrt(detm))/2./a;
+//             as[i] = ( -(2.*us[i] + us[i+1])*dt/3. 
+//                     + vs[i+1]-vs[i] )/dt/dt;
+//             bs[i] = ( (us[i]+us[i+1])*dt/2. 
+//                     - vs[i+1]+vs[i] )/2./dt/dt/dt;
+//         }
+        
+//         ts[i+1] = ts[i] + dt;
+//     }
+
+//     computed = true;
+// }
 
 void TOPPSplines::check(){
     if(!computed) return;
