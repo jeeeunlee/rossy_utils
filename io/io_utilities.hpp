@@ -8,7 +8,8 @@
 #include <Eigen/Dense>
 #include <yaml/yaml.h>
 
-#define THIS_COM "/var/log/dex/dhc_data/"
+// #define THIS_COM "/var/log/dex/dhc_data/"
+#include "rossy_utils/Configuration.h"
 
 enum myColor {
     Red=0,

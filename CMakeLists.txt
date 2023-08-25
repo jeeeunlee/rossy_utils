@@ -26,8 +26,8 @@ message(status ${PROJECT_SOURCE_DIR})
 install(TARGETS rossy_utils DESTINATION "${INSTALL_SHAREDLIB_DIR}")
 
 
-# SET (THIS_COM ${CMAKE_SOURCE_DIR}/ )
-# CONFIGURE_FILE(${PROJECT_SOURCE_DIR}/config.h.cmake ${PROJECT_SOURCE_DIR}/Configuration.h)
+SET (THIS_COM ${CMAKE_SOURCE_DIR}/ )
+CONFIGURE_FILE(${PROJECT_SOURCE_DIR}/config.h.cmake ${PROJECT_SOURCE_DIR}/Configuration.h)
 
 # install(TARGETS rossy_utils DESTINATION "${INSTALL_LIB_DIR}")
 # install(FILES ${general_headers} DESTINATION "${INSTALL_INCLUDE_DIR}/utils/General")
