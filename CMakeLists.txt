@@ -7,6 +7,7 @@ set(THIRDPARTY_INCLUDE_DIR "thirdparty")
 find_package(Eigen3)
 add_subdirectory(thirdparty/yaml)
 add_subdirectory(thirdparty/clp)
+add_subdirectory(thirdparty/cdd)
 
 FILE(GLOB_RECURSE sources "*.cpp")
 FILE(GLOB general_headers "General/*.hpp")
