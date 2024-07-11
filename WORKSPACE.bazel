@@ -1,0 +1,27 @@
+workspace(name = "bazel_rossy")
+
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive", "http_file")
+
+# Rules
+http_archive(
+    name = "rules_python",
+    sha256 = "a3a6e99f497be089f81ec082882e40246bfd435f52f4e82f37e89449b04573f6",
+    strip_prefix = "rules_python-0.10.2",
+    url = "https://github.com/bazelbuild/rules_python/archive/refs/tags/0.10.2.tar.gz",
+)
+http_archive(
+    name = "bazel_skylib",
+    sha256 = "18ae58793e9036305e02333f6d59c9e0ea73e6d066d874c04bb83a1c5c9ac4a7",
+    strip_prefix = "bazel-skylib-872e9b06e18ae8ba2897cb65b9aaa172aa6279f3",
+    url = "https://github.com/bazelbuild/bazel-skylib/archive/872e9b06e18ae8ba2897cb65b9aaa172aa6279f3.tar.gz",
+)
+load("@bazel_skylib//:workspace.bzl", "bazel_skylib_workspace")
+
+# Tools
+load("//thirdparty-bazel/clang:clang_configure.bzl", "clang_autoconf")
+load("@bazel_rossy//thirdparty-bazel/eigen:repository.bzl", "eigen_repository")
+eigen_repository(version="3.4.0")
+load("@bazel_rossy//thirdparty-bazel/pinocchio:repository.bzl", "pinocchio_repository")
+pinocchio_repository(version="3.1.0")
+
+# Libs
