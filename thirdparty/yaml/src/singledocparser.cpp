@@ -2,11 +2,11 @@
 #include <cstdio>
 #include <sstream>
 
-#include "collectionstack.h"  // IWYU pragma: keep
-#include "scanner.h"
-#include "singledocparser.h"
-#include "tag.h"
-#include "token.h"
+#include "yaml/collectionstack.h"  // IWYU pragma: keep
+#include "yaml/scanner.h"
+#include "yaml/singledocparser.h"
+#include "yaml/tag.h"
+#include "yaml/token.h"
 #include "yaml/emitterstyle.h"
 #include "yaml/eventhandler.h"
 #include "yaml/exceptions.h"  // IWYU pragma: keep

@@ -1,6 +1,6 @@
 #include "yaml/node/node.h"
-#include "nodebuilder.h"
-#include "nodeevents.h"
+#include "yaml/nodebuilder.h"
+#include "yaml/nodeevents.h"
 
 namespace YAML {
 Node Clone(const Node& node) {

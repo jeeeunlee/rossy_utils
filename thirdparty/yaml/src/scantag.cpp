@@ -1,7 +1,7 @@
-#include "exp.h"
-#include "regex_yaml.h"
-#include "regeximpl.h"
-#include "stream.h"
+#include "yaml/exp.h"
+#include "yaml/regex_yaml.h"
+#include "yaml/regeximpl.h"
+#include "yaml/stream.h"
 #include "yaml/exceptions.h"  // IWYU pragma: keep
 #include "yaml/mark.h"
 

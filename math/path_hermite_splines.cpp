@@ -1,5 +1,5 @@
 #include "math/path_hermite_splines.hpp"
-#include <io/io_utilities.hpp>
+#include "io/io_utilities.hpp"
 
 TOPPHermiteSplines::TOPPHermiteSplines() {
     initialize();
@@ -29,16 +29,14 @@ void TOPPHermiteSplines::compute() {
     // assume pddot(tend)=0
     n_wpts = ps.size()-1;
     std::vector<double> delt_inv_ord; // dt[N-1] ~ dt[0]
-    double ti, ti1, pi0, pi1, pi2, vi0, vi1, vi2;
+    double ti, ti1, pi0, pi2, vi0, vi1, vi2;
     int i=n_wpts-1;
     ti = 6.*(ps[n_wpts]-ps[n_wpts-1])/(2.*vs[n_wpts-1] + 4.*vs[n_wpts]);
     delt_inv_ord.push_back(ti);  
 
     while(i-- > 0){
-        pi0 = ps[i]; vi0 = vs[i];
-        pi1 = ps[i+1]; vi1 = vs[i+1];
-        pi2 = ps[i+2]; vi2 = vs[i+2];
-        ti1 = ti;                      
+        pi0 = ps[i]; vi0 = vs[i]; vi1 = vs[i+1]; 
+        pi2 = ps[i+2]; vi2 = vs[i+2]; ti1 = ti;                      
         ti = (6.*pi2-6.*pi0 - (4.*vi1 + 2.*vi2)*ti1) / (2.*vi0+4.*vi1);
         if(ti < 0){
             std::cout <<"!!!! ----- TOPPHermiteSplines error ----- !!!!" <<std::endl;

@@ -1,13 +1,13 @@
 #include <sstream>
 
-#include "exp.h"
-#include "regex_yaml.h"
-#include "regeximpl.h"
-#include "scanner.h"
-#include "scanscalar.h"
-#include "scantag.h"  // IWYU pragma: keep
-#include "tag.h"      // IWYU pragma: keep
-#include "token.h"
+#include "yaml/exp.h"
+#include "yaml/regex_yaml.h"
+#include "yaml/regeximpl.h"
+#include "yaml/scanner.h"
+#include "yaml/scanscalar.h"
+#include "yaml/scantag.h"  // IWYU pragma: keep
+#include "yaml/tag.h"      // IWYU pragma: keep
+#include "yaml/token.h"
 #include "yaml/exceptions.h"  // IWYU pragma: keep
 #include "yaml/mark.h"
 

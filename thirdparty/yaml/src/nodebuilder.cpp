@@ -1,7 +1,7 @@
 #include <assert.h>
 #include <cassert>
 
-#include "nodebuilder.h"
+#include "yaml/nodebuilder.h"
 #include "yaml/node/detail/node.h"
 #include "yaml/node/impl.h"
 #include "yaml/node/node.h"

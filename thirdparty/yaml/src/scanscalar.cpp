@@ -1,10 +1,10 @@
-#include "scanscalar.h"
+#include "yaml/scanscalar.h"
 
 #include <algorithm>
 
-#include "exp.h"
-#include "regeximpl.h"
-#include "stream.h"
+#include "yaml/exp.h"
+#include "yaml/regeximpl.h"
+#include "yaml/stream.h"
 #include "yaml/exceptions.h"  // IWYU pragma: keep
 
 namespace YAML {

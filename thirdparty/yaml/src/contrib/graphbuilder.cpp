@@ -1,4 +1,4 @@
-#include "graphbuilderadapter.h"
+#include "yaml/contrib/graphbuilderadapter.h"
 
 #include "yaml/parser.h"  // IWYU pragma: keep
 

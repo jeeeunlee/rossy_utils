@@ -1,0 +1,15 @@
+load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library", "cc_test")
+
+cc_library(
+    name = "yamlwrapper",
+    strip_include_prefix = "include",
+    srcs = [file for file in glob(["*.cpp","**/*.cpp"])],
+    hdrs = [file for file in glob([
+        # "src/*.h",
+        "include/yaml/*.h",
+        "include/yaml/contrib/*.h",
+        "include/yaml/node/*.h",
+        "include/yaml/node/detail/*.h",])],    
+    deps = ["@eigen"],
+    visibility = ["//visibility:public"],
+)

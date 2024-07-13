@@ -1,9 +1,9 @@
 #include <cassert>
 #include <stdexcept>
 
-#include "directives.h"  // IWYU pragma: keep
-#include "tag.h"
-#include "token.h"
+#include "yaml/directives.h"  // IWYU pragma: keep
+#include "yaml/tag.h"
+#include "yaml/token.h"
 
 namespace YAML {
 Tag::Tag(const Token& token) : type(static_cast<TYPE>(token.data)) {

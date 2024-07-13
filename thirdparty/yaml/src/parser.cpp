@@ -1,10 +1,10 @@
 #include <cstdio>
 #include <sstream>
 
-#include "directives.h"  // IWYU pragma: keep
-#include "scanner.h"     // IWYU pragma: keep
-#include "singledocparser.h"
-#include "token.h"
+#include "yaml/directives.h"  // IWYU pragma: keep
+#include "yaml/scanner.h"     // IWYU pragma: keep
+#include "yaml/singledocparser.h"
+#include "yaml/token.h"
 #include "yaml/exceptions.h"  // IWYU pragma: keep
 #include "yaml/parser.h"
 

@@ -1,7 +1,7 @@
 #include <sstream>
 
-#include "emitterutils.h"
-#include "indentation.h"  // IWYU pragma: keep
+#include "yaml/emitterutils.h"
+#include "yaml/indentation.h"  // IWYU pragma: keep
 #include "yaml/emitter.h"
 #include "yaml/emitterdef.h"
 #include "yaml/emittermanip.h"

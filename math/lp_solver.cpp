@@ -1,7 +1,6 @@
-
-#include <math/lp_solver.hpp>
-#include "sdlp/sdlp.hpp"
-#include "clp/clpwrapper.hpp"
+#include "math/lp_solver.hpp"
+#include "thirdparty/clp/clpwrapper.hpp"
+#include "thirdparty/sdlp/sdlp.hpp"
 
 // solve LP, linprog(f,A,b)
 // min f'x s.t. Ax<=b

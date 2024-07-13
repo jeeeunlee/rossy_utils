@@ -1,0 +1,19 @@
+load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library", "cc_test")
+
+cc_library(
+    name = "rossy_utils",
+    srcs = [file for file in glob([
+        "io/*.cpp", "math/*.cpp"])], # "general/*.cpp", ,"math/*.cpp"
+    hdrs = [file for file in glob([
+        "io/*.hpp", "math/*.hpp", "general/*.hpp", "thirdparty/sdlp/sdlp.hpp"])], # "general/*.hpp", ,"math/*.hpp"
+    # strip_include_prefix = "src",
+    deps = [
+        "@eigen", 
+        "@libCoinUtils", 
+        "@libClp", 
+        "//thirdparty/yaml:yamlwrapper", 
+        "//thirdparty/clp:clpwrapper", 
+        "//thirdparty/cdd:myCdd",
+    ],
+    visibility = ["//visibility:public"],
+)

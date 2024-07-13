@@ -1,6 +1,6 @@
 #include <limits>
 
-#include "emitterstate.h"
+#include "yaml/emitterstate.h"
 #include "yaml/exceptions.h"  // IWYU pragma: keep
 
 namespace YAML {

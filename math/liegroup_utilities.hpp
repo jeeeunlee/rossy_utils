@@ -2,7 +2,7 @@
 
 #include <stdio.h>
 #include <Eigen/Dense>
-#include <io/io_utilities.hpp>
+#include "io/io_utilities.hpp"
 #include <iostream>
 
 namespace rossy_utils {

@@ -1,0 +1,22 @@
+load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library", "cc_test")
+
+cc_import(
+  name = "libClp",
+  static_library = "lib/x86_64-linux-gnu/libClp.a",
+  shared_library = "lib/x86_64-linux-gnu/libClp.so",
+  visibility = ["//visibility:public"],
+)
+
+# libClp
+# include dir : /usr/include/coin
+# lib location: 
+# /usr/lib/x86_64-linux-gnu/libClp.a
+# /usr/lib/x86_64-linux-gnu/libClp.so
+
+# libCoinUtils
+# include dir : /usr/include/coin
+# lib location: 
+# /usr/lib/x86_64-linux-gnu/libCoinUtils.a
+# /usr/lib/x86_64-linux-gnu/libCoinUtils.so
+
+

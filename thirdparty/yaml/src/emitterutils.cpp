@@ -1,12 +1,12 @@
 #include <iomanip>
 #include <sstream>
 
-#include "emitterutils.h"
-#include "exp.h"
-#include "indentation.h"
-#include "regex_yaml.h"
-#include "regeximpl.h"
-#include "stringsource.h"
+#include "yaml/emitterutils.h"
+#include "yaml/exp.h"
+#include "yaml/indentation.h"
+#include "yaml/regex_yaml.h"
+#include "yaml/regeximpl.h"
+#include "yaml/stringsource.h"
 #include "yaml/binary.h"  // IWYU pragma: keep
 #include "yaml/ostream_wrapper.h"
 #include "yaml/null.h"

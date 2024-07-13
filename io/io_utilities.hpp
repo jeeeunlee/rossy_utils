@@ -9,7 +9,8 @@
 #include <yaml/yaml.h>
 
 // #define THIS_COM "/var/log/dex/dhc_data/"
-#include "rossy_utils/Configuration.h"
+// #include "rossy_utils/Configuration.h"
+#define THIS_COM "~/my_ws/TrajOpt/src/rossy_utils"
 
 enum myColor {
     Red=0,

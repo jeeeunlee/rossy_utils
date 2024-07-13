@@ -1,4 +1,4 @@
-#include "graphbuilderadapter.h"
+#include "yaml/contrib/graphbuilderadapter.h"
 #include "yaml/contrib/graphbuilder.h"
 
 namespace YAML {

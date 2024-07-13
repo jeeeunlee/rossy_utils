@@ -1,5 +1,5 @@
 
-#include <math/hermite_curve.hpp>
+#include "math/hermite_curve.hpp"
 
 // Constructor
 HermiteCurve::HermiteCurve(){

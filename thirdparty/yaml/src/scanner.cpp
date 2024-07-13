@@ -1,9 +1,9 @@
 #include <cassert>
 #include <memory>
 
-#include "exp.h"
-#include "scanner.h"
-#include "token.h"
+#include "yaml/exp.h"
+#include "yaml/scanner.h"
+#include "yaml/token.h"
 #include "yaml/exceptions.h"  // IWYU pragma: keep
 
 namespace YAML {

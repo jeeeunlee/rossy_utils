@@ -23,5 +23,5 @@ def pinocchio_repository(
         ],
         sha256 = sha256,
         strip_prefix = "pinocchio-{}".format(version),
-        build_file = Label("//tools/workspace/pinocchio:package.BUILD"),
+        build_file = Label("//thirdparty-bazel/pinocchio:package.BUILD"),
     )

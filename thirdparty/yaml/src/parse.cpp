@@ -6,7 +6,7 @@
 #include "yaml/node/node.h"
 #include "yaml/node/impl.h"
 #include "yaml/parser.h"
-#include "nodebuilder.h"
+#include "yaml/nodebuilder.h"
 
 namespace YAML {
 Node Load(const std::string& input) {

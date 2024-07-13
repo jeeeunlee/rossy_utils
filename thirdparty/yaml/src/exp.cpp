@@ -1,7 +1,7 @@
 #include <sstream>
 
-#include "exp.h"
-#include "stream.h"
+#include "yaml/exp.h"
+#include "yaml/stream.h"
 #include "yaml/exceptions.h"  // IWYU pragma: keep
 
 namespace YAML {

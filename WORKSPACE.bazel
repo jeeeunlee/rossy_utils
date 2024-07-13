@@ -24,4 +24,18 @@ eigen_repository(version="3.4.0")
 load("@bazel_rossy//thirdparty-bazel/pinocchio:repository.bzl", "pinocchio_repository")
 pinocchio_repository(version="3.1.0")
 
-# Libs
+# Dependencies
+
+new_local_repository(
+    name = "libClp",
+    path = "/usr",
+    build_file = "//thirdparty-bazel/libClp:BUILD.bazel"
+)
+new_local_repository(
+    name = "libCoinUtils",
+    path = "/usr",
+    build_file = "//thirdparty-bazel/libCoinUtils:BUILD.bazel"
+)
+
+
+
