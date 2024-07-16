@@ -26,5 +26,5 @@ def eigen_repository(
         ],
         sha256 = sha256,
         strip_prefix = "eigen-{}".format(version),
-        build_file = Label("//thirdparty-bazel/eigen:package.BUILD"),
+        build_file = Label("//rossy_utils/thirdparty-bazel/eigen:package.BUILD"),
     )

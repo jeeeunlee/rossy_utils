@@ -1,5 +1,5 @@
 
-#include "math/hermite_curve.hpp"
+#include "rossy_utils/math/hermite_curve.hpp"
 
 // Constructor
 HermiteCurve::HermiteCurve(){

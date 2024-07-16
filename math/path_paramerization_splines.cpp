@@ -1,5 +1,5 @@
-#include "math/path_paramerization_splines.hpp"
-#include "io/io_utilities.hpp"
+#include "rossy_utils/math/path_paramerization_splines.hpp"
+#include "rossy_utils/io/io_utilities.hpp"
 
 TOPPSplines::TOPPSplines() {
     initialize();

@@ -1,7 +1,6 @@
-#include "math/math_utilities.hpp"
+#include "rossy_utils/math/math_utilities.hpp"
 #include <cassert>
 #include <cmath>
-#include "math_utilities.hpp"
 
 namespace rossy_utils {
 
@@ -388,17 +387,19 @@ double CropValue(double value, double min, double max, std::string source) {
     return value;
 }
 
-double CropValue(double value, double min, double max)
-{
+double CropValue(double value, double min, double max) {
     assert(min < max);
-    if (value > max) value = max;    
-    if (value < min) value = min;    
+    if (value > max) {
+        value = max;
+    }
+    if (value < min) {
+        value = min;
+    }
     return value;
 }
 
 Eigen::VectorXd CropVector(Eigen::VectorXd value, Eigen::VectorXd min,
-                           Eigen::VectorXd max, std::string source)
-{
+                           Eigen::VectorXd max, std::string source) {
     assert(value.size() == min.size());
     assert(value.size() == max.size());
     int n_data = value.size();

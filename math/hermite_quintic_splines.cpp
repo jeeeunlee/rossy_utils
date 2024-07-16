@@ -1,6 +1,6 @@
 
-#include "math/hermite_quintic_splines.hpp"
-#include "io/io_utilities.hpp"
+#include "rossy_utils/math/hermite_quintic_splines.hpp"
+#include "rossy_utils/io/io_utilities.hpp"
 #include <math.h>
 #include <algorithm>
 

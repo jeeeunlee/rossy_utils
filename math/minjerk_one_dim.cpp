@@ -1,4 +1,4 @@
-#include "math/minjerk_one_dim.hpp"
+#include "rossy_utils/math/minjerk_one_dim.hpp"
 
 // Empty Constructor
 MinJerk_OneDimension::MinJerk_OneDimension(){

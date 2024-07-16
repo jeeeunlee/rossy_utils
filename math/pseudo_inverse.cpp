@@ -1,4 +1,4 @@
-#include "math/pseudo_inverse.hpp"
+#include "rossy_utils/math/pseudo_inverse.hpp"
 #include <Eigen/LU>
 #include <Eigen/SVD>
 #include <stdio.h>

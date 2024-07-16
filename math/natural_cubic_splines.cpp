@@ -1,6 +1,6 @@
 
-#include "math/natural_cubic_splines.hpp"
-#include "io/io_utilities.hpp"
+#include "rossy_utils/math/natural_cubic_splines.hpp"
+#include "rossy_utils/io/io_utilities.hpp"
 #include <math.h>
 #include <algorithm>
 
