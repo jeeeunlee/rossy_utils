@@ -297,7 +297,7 @@ double smooth_changing_acc(double ini, double end, double moving_duration,
 }
 
 double smoothing(double ini, double fin, double rat) {
-  double ret(0.);
+//   double ret(0.);
   if (rat < 0) {
     return ini;
   } else if (rat > 1) {

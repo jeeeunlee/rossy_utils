@@ -11,7 +11,8 @@ def pinocchio_repository(
         version: version of the library to get.
         sha256: SHA-256 checksum of the downloaded archive.
     """
-    ver2sha = {"2.6.0":"4ded587192561d434d4158fdae56dd36b0c3a0db65ae4768df94428161bad522" }
+    ver2sha = {"2.6.10":"4ded587192561d434d4158fdae56dd36b0c3a0db65ae4768df94428161bad522",
+                "3.1.0":"e624484077eee3183e20443ab0373205bb832a2597241531705116fa9f07016a" }
     if(sha256 == ""):
         if version in ver2sha: 
             sha256 = ver2sha[version]

@@ -1,7 +1,7 @@
 load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library", "cc_test")
 
 cc_library(
-    name = "lib_rossy_utils",
+    name = "rossy_utils",
     srcs = [file for file in glob([
         "io/*.cpp", "math/*.cpp"])], # "general/*.cpp", ,"math/*.cpp"
     hdrs = [file for file in glob([
@@ -14,6 +14,21 @@ cc_library(
         "//rossy_utils/thirdparty/yaml:yamlwrapper", 
         "//rossy_utils/thirdparty/clp:clpwrapper", 
         "//rossy_utils/thirdparty/cdd:myCdd",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "robot_system",
+    srcs = [file for file in glob([
+        "robot_system/*.cpp"])], # "general/*.cpp", ,"math/*.cpp"
+    hdrs = [file for file in glob([
+        "robot_system/*.hpp"])], # "general/*.hpp", ,"math/*.hpp"
+    # strip_include_prefix = "src/rossy_utils",
+    deps = [
+        "@eigen", 
+        "@pinocchio", 
+        "rossy_utils", 
     ],
     visibility = ["//visibility:public"],
 )
