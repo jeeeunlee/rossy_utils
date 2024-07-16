@@ -1,5 +1,5 @@
-#include "cccb_spline.hpp"
-#include "math_utilities.hpp"
+#include "rossy_utils/math/cccb_spline.hpp"
+#include "rossy_utils/math_utilities.hpp"
 
 CCCBSpline::CCCBSpline()
 {
