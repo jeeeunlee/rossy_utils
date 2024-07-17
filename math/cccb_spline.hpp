@@ -25,18 +25,18 @@ public:
 	void setControlPoints(const double &pi, 
 						const double &pf,
 						const std::vector<double> &cp_in);
-	void resetKnotVectors();
 	int getNumIntervals(){return N_;}
+	double getMotionPeriod(){return ((double)N_) * h_;}
 
 private:
 	// p = m-n-1 = (N+6)-(N+2)-1 (Cubic spline with C2 continuity)
     static const int p_ = 3; // degree
     int N_; // # of intervals
 	double h_; // time duration
+
     // cp{-3}, cp{-2},..., cp{N-1}
-    std::vector<double> cp_; // (n+1)=N+3 control points    
-    // kv{-3}, kv{-2},..., kv{N+3}
-    std::vector<double> kv_; // (m+1)=N+7 knot vectors	
+    std::vector<double> cp_; // (n+1)=N+3 control points
+	// kv{-3}, cp{-2},..., kv{N+3}: N+7 knot vector
     
 	int getNumCPs(){return (N_+2)+1; }
 	int getNumKVs(){return (N_+6)+1; }	
@@ -59,10 +59,10 @@ public:
 	void setControlPoints(const Eigen::VectorXd &pi, 
 						const Eigen::VectorXd &pf,
 						const std::vector<Eigen::VectorXd> &cp_in);
-	void resetKnotVectors();
 
 	int getDim(){return dim_; }
 	int getNumIntervals(){return N_;}
+	double getMotionPeriod(){return ((double)N_) * h_;}
 
 private:
 	// p = m-n-1 = (N+6)-(N+2)-1 (Cubic spline with C2 continuity)

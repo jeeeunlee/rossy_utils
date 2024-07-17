@@ -5,7 +5,6 @@
 CCCBSpline::CCCBSpline()
 {
     cp_.clear();
-    kv_.clear();
     h_ = 1.;
     N_ = 0;
 }
@@ -15,14 +14,12 @@ CCCBSpline::CCCBSpline(const double& pi,
         const std::vector<double>& cp_var_in,
         double h_in){
     h_ = h_in;
-    setControlPoints(pi, pf, cp_var_in); 
-    resetKnotVectors();
+    setControlPoints(pi, pf, cp_var_in);     
 }
 
 CCCBSpline::~CCCBSpline()
 {
     cp_.clear();
-    kv_.clear();
 }
 
 double CCCBSpline::evaluate(const double &t_in)
@@ -94,8 +91,8 @@ double CCCBSpline::evaluateSecondDerivative(const double &t_in)
 
 int CCCBSpline::evaluateTimeInterval(const double &t_in)
 {
-    // if kv_[i] < t_in < kv_[i+1]: return i = 0 ~ N_-1
-    int i = (int)(t_in / h_); // + kv_base_
+    // if i*h < t_in < (i+1)*h: return i = 0 ~ N_-1
+    int i = (int)(t_in / h_); // 
     return i;
 }
 
@@ -117,16 +114,6 @@ void CCCBSpline::setControlPoints(const double & pi,
     N_ = cp_.size()-3;
 }
 
-void CCCBSpline::resetKnotVectors()
-{
-    // reset kvs based on h_;
-    kv_.resize(getNumKVs());
-    for(int i{0}; i<getNumKVs(); ++i) {
-       kv_[i] = rossy_utils::CropValue((double)(i-3), 0., N_)*h_;
-    }
-}
-
-
 
 // Vector
 
@@ -145,7 +132,6 @@ CCCBSplineVec::CCCBSplineVec(const Eigen::VectorXd & pi,
     double h_in){
     h_ = h_in;
     setControlPoints(pi, pf, cp_var_in); 
-    resetKnotVectors();
 }
 
 
@@ -216,12 +202,4 @@ void CCCBSplineVec::setControlPoints(const Eigen::VectorXd & pi,
         curves_[d].setControlPoints(pi[d], pf[d], cp_in_d);
         N_ = curves_[d].getNumIntervals();
     }    
-}
-
-void CCCBSplineVec::resetKnotVectors()
-{
-    for(auto & sp1d : curves_){
-        sp1d.resetKnotVectors();
-    }
-    
 }
