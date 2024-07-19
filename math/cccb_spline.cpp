@@ -17,6 +17,19 @@ CCCBSpline::CCCBSpline(const double& pi,
     setControlPoints(pi, pf, cp_var_in);     
 }
 
+CCCBSpline::CCCBSpline(const double& pi, 
+        const double& pf, 
+        const Eigen::VectorXd& cp_var_in,
+        double h_in){
+    h_ = h_in;
+
+    // Eigen Vector 2 std vector
+    std::vector<double> cp_var;
+    cp_var.resize(cp_var_in.size());
+    Eigen::VectorXd::Map(&cp_var[0], cp_var_in.size()) = cp_var_in;
+    setControlPoints(pi, pf, cp_var);
+}
+
 CCCBSpline::~CCCBSpline()
 {
     cp_.clear();
@@ -114,16 +127,10 @@ void CCCBSpline::setControlPoints(const double & pi,
     N_ = cp_.size()-3;
 }
 
-
 // Vector
-
 CCCBSplineVec::CCCBSplineVec()
 {
-    curves_.clear();
-    h_ = 1.;
-    N_ = 0;
-    dim_ = 0;
-
+    initialize();
 }
 
 CCCBSplineVec::CCCBSplineVec(const Eigen::VectorXd & pi, 
@@ -140,6 +147,12 @@ CCCBSplineVec::~CCCBSplineVec()
     curves_.clear();
 }
 
+void CCCBSplineVec::initialize(){
+    curves_.clear();
+    h_ = 1.;
+    N_ = 0;
+    dim_ = 0;
+}
 
 
 int CCCBSplineVec::evaluateTimeInterval(const double & t_in)
@@ -179,6 +192,17 @@ Eigen::VectorXd CCCBSplineVec::evaluateSecondDerivative(const double &t_in)
 void CCCBSplineVec::setTimeDuration(const double & h_in)
 {
     h_ = h_in;
+    for(auto & curve: curves_)
+        curve.setTimeDuration(h_in);
+}
+
+
+
+void CCCBSplineVec::addControlPoints(const double &pi, 
+        const double &pf, const Eigen::VectorXd &cp_in){
+    
+    curves_.push_back(CCCBSpline(pi,pf,cp_in));
+    N_ = curves_[curves_.size()-1].getNumIntervals();
 }
 
 void CCCBSplineVec::setControlPoints(const Eigen::VectorXd & pi, 

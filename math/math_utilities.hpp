@@ -24,6 +24,10 @@ Eigen::VectorXd MatrixtoVector(const Eigen::MatrixXd& a);
 Eigen::MatrixXd VectortoMatrix(const Eigen::VectorXd& a, int dim);
 Eigen::VectorXd vector2EigenVector(const std::vector<double>& vec, int k, int l);
 Eigen::VectorXd vector2EigenVector(const std::vector<double>& vec);
+Eigen::MatrixXd vector2EigenMatrix(const std::vector<Eigen::VectorXd> &vOfv);
+
+Eigen::MatrixXd kroneckerProduct(const Eigen::MatrixXd& A, const Eigen::MatrixXd& B);
+Eigen::VectorXd elementWiseDivisionExt(const Eigen::VectorXd& a, const Eigen::VectorXd& b);
 
 // void hStackConserve(Eigen::MatrixXd& a, const Eigen::MatrixXd& b);
 // void hStackConserve(Eigen::VectorXd& a_, const Eigen::VectorXd& b_);
@@ -42,7 +46,6 @@ void convertIsoToVec6d(const Eigen::Isometry3d& iso_in,
                     Eigen::VectorXd& vec_out);
 void convertIsoToVec7d(const Eigen::Isometry3d& iso_in,
                     Eigen::VectorXd& vec_out);
-
 
 // =============================================================================
 // Simple Trajectory Generator

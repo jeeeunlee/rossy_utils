@@ -14,6 +14,8 @@ public:
 	CCCBSpline();
 	CCCBSpline(const double &pi, const double &pf, 
 			const std::vector<double> &cp_var_in, double h_in=1.);
+	CCCBSpline(const double &pi, const double &pf, 
+			const Eigen::VectorXd &cp_var_in, double h_in=1.);
 	~CCCBSpline();
 
 	int evaluateTimeInterval(const double &t_in);
@@ -25,6 +27,7 @@ public:
 	void setControlPoints(const double &pi, 
 						const double &pf,
 						const std::vector<double> &cp_in);
+
 	int getNumIntervals(){return N_;}
 	double getMotionPeriod(){return ((double)N_) * h_;}
 
@@ -49,6 +52,8 @@ public:
 	CCCBSplineVec(const Eigen::VectorXd &pi, const Eigen::VectorXd &pf, 
 			const std::vector<Eigen::VectorXd> &cp_var_in, double h_in=1.);
 	~CCCBSplineVec();
+
+	void initialize();
 	
 	int evaluateTimeInterval(const double &t_in);	
 	Eigen::VectorXd evaluate(const double &t_in);
@@ -59,6 +64,9 @@ public:
 	void setControlPoints(const Eigen::VectorXd &pi, 
 						const Eigen::VectorXd &pf,
 						const std::vector<Eigen::VectorXd> &cp_in);
+	void addControlPoints(const double &pi, 
+						const double &pf, 
+						const Eigen::VectorXd &cp_in);
 
 	int getDim(){return dim_; }
 	int getNumIntervals(){return N_;}

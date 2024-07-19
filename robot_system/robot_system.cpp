@@ -12,7 +12,8 @@ RobotSystem::RobotSystem(const RobotSystem& robotsys)
 
 RobotSystem::RobotSystem(const std::string& file): urdf_file_(file) {
     rossy_utils::pretty_constructor(1, "Robot Model");
-    rossy_utils::color_print(myColor::BoldGreen, "    || path="+urdf_file_);
+    rossy_utils::color_print(myColor::BoldCyan, "|", false);
+    rossy_utils::color_print(myColor::BoldGreen, "        path="+urdf_file_);
     _initializeRobotInfo();
     // printRobotInfo();
 }

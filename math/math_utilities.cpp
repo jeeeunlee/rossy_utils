@@ -1,6 +1,7 @@
 #include "rossy_utils/math/math_utilities.hpp"
 #include <cassert>
 #include <cmath>
+#include "math_utilities.hpp"
 
 namespace rossy_utils {
 
@@ -103,6 +104,7 @@ Eigen::MatrixXd VectortoMatrix(const Eigen::VectorXd& a, int dim){
     for(int i(0); i<mat.cols(); ++i){
         mat.col(i) = a.segment(dim*i, dim);
     }
+    return mat;
 }
 
 Eigen::VectorXd vector2EigenVector(const std::vector<double>& vec, int k, int l){
@@ -112,15 +114,51 @@ Eigen::VectorXd vector2EigenVector(const std::vector<double>& vec, int k, int l)
         l = std::max(0, l);
     }
     Eigen::VectorXd ret = Eigen::VectorXd::Zero(l);
-
     for(int i(0); i<l; i++)
         ret(i) = vec[k+i];
-
     return ret;
 }
 
 Eigen::VectorXd vector2EigenVector(const std::vector<double>& vec){
     return vector2EigenVector(vec,0,vec.size());
+}
+
+Eigen::MatrixXd vector2EigenMatrix(
+        const std::vector<Eigen::VectorXd> &vOfv){
+    int n = vOfv.size();
+    if(n==0)
+        return Eigen::MatrixXd::Zero(0,0);
+    int dim = vOfv[0].size();
+    Eigen::MatrixXd mat = Eigen::MatrixXd::Zero(dim,n); // dim x n
+    for(int i(0); i<n; ++i){
+        mat.col(i) = vOfv[i];
+    }        
+    return mat;
+}
+
+
+Eigen::MatrixXd kroneckerProduct(const Eigen::MatrixXd & A, const Eigen::MatrixXd & B)
+{
+    // Kronecker product A(m x n)⊗B(p x q) = C(pm x qn)
+    // e.g. A⊗B = [ a11 B   a12 B   ... ]
+    //            [ a21 B   a22 B   ... ]
+    Eigen::MatrixXd ret = 
+        Eigen::MatrixXd::Zero(B.rows()*A.rows(), B.cols()*A.cols());
+    for(int i(0); i<A.rows(); ++i){
+        for(int j(0); j<A.cols(); ++j){
+            ret.block(i*B.rows(),j*B.cols(),B.rows(),B.cols()) = A(i,j)*B;
+        }
+    }
+    return ret;
+}
+
+Eigen::VectorXd elementWiseDivisionExt(const Eigen::VectorXd& a, const Eigen::VectorXd& b){
+    assert(a.size()%b.size()==0 && a.size()/b.size()>0);
+    Eigen::VectorXd ret = Eigen::VectorXd::Zero(a.size());
+    for(int i(0); i<a.size()/b.size();++i){
+        ret.segment(i*b.size(),b.size()) = a.segment(i*b.size(),b.size()).array() / b.array();
+    }
+    return ret;
 }
 
 Eigen::MatrixXd deleteRow(const Eigen::MatrixXd& a_, int row_) {
