@@ -38,7 +38,7 @@ unsigned long set_blocks(long len)
 {
 	long blocks=1L;
 	
-	if (len>0) blocks=((long)len-1)/SETBITS+2;
+	if (len>0) blocks=((long)len-1)/(long)SETBITS+2;
 	return blocks;
 }
 
