@@ -1,5 +1,5 @@
 #include "rossy_utils/solvers/lp_solver.hpp"
-#include "Highs.h"
+#include <Highs.h>
 #include <cassert>
 
 #define ZCE 1e-8
@@ -25,9 +25,9 @@ double linprog(const Eigen::VectorXd& f,
     // cost
     model.lp_.col_cost_.resize(Nvar); 
     Eigen::VectorXd::Map(&model.lp_.col_cost_[0], Nvar) = f;
-    std::cout<< "model.lp_.col_cost_ = " << std::endl;
-    for(auto & d : model.lp_.col_cost_) std::cout << d << ", ";
-    std::cout<<std::endl;
+    // std::cout<< "model.lp_.col_cost_ = " << std::endl;
+    // for(auto & d : model.lp_.col_cost_) std::cout << d << ", ";
+    // std::cout<<std::endl;
     // # of variables
     model.lp_.num_col_ = Nvar;
     // # of constraints
@@ -124,9 +124,6 @@ void printOptimizerMsgs(const Highs& highs){
     std::cout << std::endl;
   }
 }
-
-
-
 
 // solve LP, linprog(f,A,b)
 // min f'x s.t. lb<Ax<=ub
