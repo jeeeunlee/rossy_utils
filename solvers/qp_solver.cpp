@@ -5,7 +5,7 @@
 #include <cassert>
 
 #define ZCE 1e-8
-#define INF 1e6
+const double INF = std::numeric_limits<double>::infinity();
 
 double rossy_utils::qpprog(Eigen::MatrixXd& G, Eigen::VectorXd& g0,
                       const Eigen::MatrixXd& CE, const Eigen::VectorXd& ce0,
@@ -16,6 +16,19 @@ double rossy_utils::qpprog(Eigen::MatrixXd& G, Eigen::VectorXd& g0,
 // s.t.
 //     CE^T x + ce0 = 0
 //     CI^T x + ci0 >= 0
+ return solve_quadprog(G, g0, CE, ce0, CI, ci0, x);
+}
+
+double rossy_utils::qpprog(Eigen::MatrixXd& G, Eigen::VectorXd& g0,
+                      const Eigen::MatrixXd& CI, const Eigen::VectorXd& ci0,
+                      Eigen::VectorXd& x)
+{
+//     min 0.5 * x G x + g0 x
+// s.t.
+//     CE^T x + ce0 = 0
+//     CI^T x + ci0 >= 0
+Eigen::MatrixXd CE = Eigen::MatrixXd::Zero(0,0);
+Eigen::VectorXd ce0 = Eigen::VectorXd::Zero(0);
  return solve_quadprog(G, g0, CE, ce0, CI, ci0, x);
 }
 
@@ -53,17 +66,21 @@ double rossy_utils::qpprogHiGHS(const Eigen::MatrixXd & Q,
     }  
 
     // set constraints A, b
+    EigenMatrix2PackedMat(A, model.lp_.a_matrix_);
     model.lp_.row_lower_.resize(Nconst);
     model.lp_.row_upper_.resize(Nconst);
     for(int i(0); i<Nconst; ++i){
         model.lp_.row_lower_[i] = -INF;
         model.lp_.row_upper_[i] = b(i);
     }
-    EigenMatrix2PackedMat(A, model.lp_.a_matrix_);
 
     // Create a Highs instance and solve the problem
     Highs highs;
-    HighsStatus return_status = highs.passModel(model);
+    HighsStatus return_status;
+    // return_status = highs.passHessian(model.hessian_);
+    // assert(return_status==HighsStatus::kOk);
+    assert(model.isQp());
+    return_status = highs.passModel(model);    
     assert(return_status==HighsStatus::kOk);    
     return_status = highs.run();
     assert(return_status==HighsStatus::kOk);
@@ -75,10 +92,12 @@ double rossy_utils::qpprogHiGHS(const Eigen::MatrixXd & Q,
     return info.objective_function_value;
 }
 
-void EigenMatrix2Hessian(const Eigen::MatrixXd& H,
+void rossy_utils::EigenMatrix2Hessian(const Eigen::MatrixXd& H,
     HighsHessian& hessian){
     // Assume Symmetric H = H'
-    hessian.format_ = HessianFormat::kTriangular;
+    // hessian.format_ = HessianFormat::kTriangular; // 
+    hessian.dim_ = H.cols();
+    hessian.format_ = HessianFormat::kSquare; // 
     hessian.start_.clear();
     hessian.index_.clear();
     hessian.value_.clear();
@@ -86,7 +105,7 @@ void EigenMatrix2Hessian(const Eigen::MatrixXd& H,
     int idx(0);
     for(int c(0); c<H.cols(); ++c){
         hessian.start_.push_back(idx);    
-        for(int r(c); r<H.rows(); ++r){                    
+        for(int r(0); r<H.rows(); ++r){                    
             if( std::abs(H(r,c)) > ZCE)
             {                
                 hessian.index_.push_back(r);
@@ -95,5 +114,20 @@ void EigenMatrix2Hessian(const Eigen::MatrixXd& H,
             }
         }
     }
-    hessian.start_.push_back(idx);    
+    hessian.start_.push_back(idx);
+    // check
+    // std::cout<<" hessian.start_ = " << std::endl;
+    // for (auto &s : hessian.start_)    
+    //     std::cout<< s << ", ";
+    // std::cout<<std::endl;
+
+    // std::cout<<" hessian.index_ = " << std::endl;
+    // for (auto &s : hessian.index_)    
+    //     std::cout<< s << ", ";
+    // std::cout<<std::endl;
+
+    // std::cout<<" hessian.value_ = " << std::endl;
+    // for (auto &s : hessian.value_)    
+    //     std::cout<< s << ", ";
+    // std::cout<<std::endl;
 }
