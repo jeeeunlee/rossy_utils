@@ -16,6 +16,8 @@ cmake(
     cache_entries = {
         "BUILD_OSG_EXAMPLES": "OFF",
         "BUILD_OSG_DEPRECATED_SERIALIZERS": "OFF",
+        "BUILD_OSG_APPLICATIONS": "OFF",
+        "BUILD_OSG_PLUGINS": "OFF",
         "CMAKE_BUILD_TYPE": "Release",
     },
     deps = [
