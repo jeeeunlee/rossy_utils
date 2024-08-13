@@ -13,7 +13,7 @@ RobotSystem::RobotSystem(const RobotSystem& robotsys)
 RobotSystem::RobotSystem(const std::string& file): urdf_file_(file) {
     rossy_utils::pretty_constructor(1, "Robot Model");
     rossy_utils::color_print(myColor::BoldCyan, "|", false);
-    rossy_utils::color_print(myColor::BoldGreen, "        path="+urdf_file_);
+    rossy_utils::color_print(myColor::Green, "        path="+urdf_file_);
     _initializeRobotInfo();
     // printRobotInfo();
 }
@@ -158,10 +158,10 @@ int RobotSystem::getLinkIdx(const std::string& frame_name) {
 int RobotSystem::getJointIdx(const std::string& jointName) {    
     return joint_idx_map_[jointName]; }
 
-std::string RobotSystem::getLinkName(const int& frame_idx) {    
+std::string_view RobotSystem::getLinkName(const int& frame_idx) {    
     return link_idx_map_inv_[frame_idx]; }
 
-std::string RobotSystem::getJointName(const int& joint_idx) {    
+std::string_view RobotSystem::getJointName(const int& joint_idx) {    
     return joint_idx_map_inv_[joint_idx]; }
 
 void RobotSystem::updateSystem(const Eigen::VectorXd &joint_pos,
@@ -216,7 +216,8 @@ void RobotSystem::_initializeRobotInfo() {
 }
 
 void RobotSystem::printRobotInfo() {
-    
+    std::cout << " ==== Robot ====" << std::endl;
+    std::cout << model_.name << std::endl;
     std::cout << " ==== Body Node ====" << std::endl;
     for (auto &[idx, name] : link_idx_map_inv_) {
         std::cout << "constexpr int " << name  << " = "

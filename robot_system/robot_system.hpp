@@ -42,16 +42,15 @@ class RobotSystem {
     std::map<std::string, size_t> joint_idx_map_;
     std::map<size_t, std::string> link_idx_map_inv_;
     std::map<size_t, std::string> joint_idx_map_inv_; 
-    
-   
 
    public:
     RobotSystem(const RobotSystem& robotsys); // copier
     RobotSystem(const std::string& file);
     virtual ~RobotSystem(void);
 
-    void printRobotInfo();    
-    std::string getUrdfFile(){return urdf_file_;}
+    void printRobotInfo();
+    std::string_view getRobotName(){return model_.name;}
+    std::string_view getUrdfFile(){return urdf_file_;}
 
     // update fixed base system
     void updateSystem(const Eigen::VectorXd &joint_pos,
@@ -67,7 +66,6 @@ class RobotSystem {
     Eigen::VectorXd GetPositionUpperLimits() { return model_.upperPositionLimit;} 
     Eigen::VectorXd GetVelocityLowerLimits() { return -model_.velocityLimit;}
     Eigen::VectorXd GetVelocityUpperLimits() { return model_.velocityLimit;}   
-
     
     double getRobotMass() { return total_mass_; }
     int getNumDofs() { return n_qdot_; };
@@ -75,8 +73,8 @@ class RobotSystem {
 
     int getJointIdx(const std::string& joint_name);
     int getLinkIdx(const std::string& frame_name);
-    std::string getLinkName(const int& frame_idx);
-    std::string getJointName(const int& joint_idx); 
+    std::string_view getLinkName(const int& frame_idx);
+    std::string_view getJointName(const int& joint_idx); 
 
     Eigen::MatrixXd getMassMatrix();
     Eigen::MatrixXd getInvMassMatrix();
