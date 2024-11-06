@@ -295,55 +295,6 @@ std::string pretty_string(double vv) {
     return str;
 }
 
-// double smooth_changing(double ini, double end, double moving_duration,
-//                        double curr_time) {
-//     double ret;
-//     ret =
-//         ini + (end - ini) * 0.5 * (1 - cos(curr_time / moving_duration * M_PI));
-//     if (curr_time > moving_duration) {
-//         ret = end;
-//     }
-//     return ret;
-// }
-
-// double smooth_changing_vel(double ini, double end, double moving_duration,
-//                            double curr_time) {
-//     double ret;
-//     ret = (end - ini) * 0.5 * (M_PI / moving_duration) *
-//           sin(curr_time / moving_duration * M_PI);
-//     if (curr_time > moving_duration) {
-//         ret = 0.0;
-//     }
-//     return ret;
-// }
-// double smooth_changing_acc(double ini, double end, double moving_duration,
-//                            double curr_time) {
-//     double ret;
-//     ret = (end - ini) * 0.5 * (M_PI / moving_duration) *
-//           (M_PI / moving_duration) * cos(curr_time / moving_duration * M_PI);
-//     if (curr_time > moving_duration) {
-//         ret = 0.0;
-//     }
-//     return ret;
-// }
-// void getSinusoidTrajectory(double initTime_, const Eigen::VectorXd& midPoint_,
-//                            const Eigen::VectorXd& amp_,
-//                            const Eigen::VectorXd& freq_, double evalTime_,
-//                            Eigen::VectorXd& p_, Eigen::VectorXd& v_,
-//                            Eigen::VectorXd& a_) {
-//     int dim = midPoint_.size();
-//     p_ = Eigen::VectorXd::Zero(dim);
-//     v_ = Eigen::VectorXd::Zero(dim);
-//     a_ = Eigen::VectorXd::Zero(dim);
-//     for (int i = 0; i < dim; ++i) {
-//         p_[i] = amp_[i] * sin(2 * M_PI * freq_[i] * (evalTime_ - initTime_)) +
-//                 midPoint_[i];
-//         v_[i] = amp_[i] * 2 * M_PI * freq_[i] *
-//                 cos(2 * M_PI * freq_[i] * (evalTime_ - initTime_));
-//         a_[i] = -amp_[i] * 2 * M_PI * freq_[i] * 2 * M_PI * freq_[i] *
-//                 sin(2 * M_PI * freq_[i] * (evalTime_ - initTime_));
-//     }
-// }
 
 void readFile(std::string _file_name, std::vector<std::string>& _vec) {
     std::ifstream InputFile(_file_name.c_str());
