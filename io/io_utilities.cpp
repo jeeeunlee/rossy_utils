@@ -1,77 +1,11 @@
 #include "rossy_utils/io/io_utilities.hpp"
-#include <fstream>
-#include <iostream>
+
 #include <string>
 #include <vector>
 
 namespace rossy_utils {
 
-void saveVector(const Eigen::VectorXd& vec_, std::string name_, bool b_param) {
-    std::string file_name;
-    cleaningFile(name_, file_name, b_param);
-
-    std::ofstream savefile(file_name.c_str(), std::ios::app);
-    for (int i(0); i < vec_.rows(); ++i) {
-        savefile << vec_(i) << "\t";
-    }
-    savefile << "\n";
-    savefile.flush();
-}
-
-void saveVector(const Eigen::Quaterniond& qq, std::string name_, bool b_param) {
-    std::string file_name;
-    cleaningFile(name_, file_name, b_param);
-
-    std::ofstream savefile(file_name.c_str(), std::ios::app);
-    
-    savefile << qq.w() << "\t" << qq.x() << "\t"
-             << qq.y() << "\t" << qq.z() << "\t";  
-    
-    savefile << "\n";
-    savefile.flush();
-}
-
-void saveMatrix(const Eigen::MatrixXd& mtx_, std::string name_, bool b_param) {
-    for(int j=0; j<mtx_.rows(); ++j)  {
-        saveVector(mtx_.row(j), name_ , b_param);
-    }
-}
-
-void saveValue(double _value, std::string _name, bool b_param) {
-    std::string file_name;
-    cleaningFile(_name, file_name, b_param);
-    std::ofstream savefile(file_name.c_str(), std::ios::app);
-
-    savefile << _value << "\n";
-    savefile.flush();
-}
-
-void saveVector(double* _vec, std::string _name, int size, bool b_param) {
-    std::string file_name;
-    cleaningFile(_name, file_name, b_param);
-    std::ofstream savefile(file_name.c_str(), std::ios::app);
-
-    for (int i(0); i < size; ++i) {
-        savefile << _vec[i] << "\t";
-    }
-    savefile << "\n";
-    savefile.flush();
-}
-
-void saveVector(const std::vector<double>& _vec, std::string _name,
-                bool b_param) {
-    std::string file_name;
-    cleaningFile(_name, file_name, b_param);
-    std::ofstream savefile(file_name.c_str(), std::ios::app);
-    for (int i(0); i < _vec.size(); ++i) {
-        savefile << _vec[i] << "\t";
-    }
-    savefile << "\n";
-    savefile.flush();
-}
-
-void cleaningFile(std::string _file_name, std::string& _ret_file,
-                  bool b_param) {
+void cleaningFile(std::string _file_name, std::string& _ret_file, bool b_param) {
     if (b_param)
         _ret_file += THIS_COM;
     else
@@ -88,33 +22,6 @@ void cleaningFile(std::string _file_name, std::string& _ret_file,
     }
 }
 
-
-void size_print(Eigen::VectorXd const & vv, std::ostream & os,
-    std::string const & title, std::string const & prefix, bool nonl){
-    char const* nlornot("\n");
-    if (nonl) {
-        nlornot = "";
-    }
-    if (!title.empty()) {
-        os << title <<"(length: " <<vv.size() <<")"<< nlornot;
-    }
-}
-void size_print(Eigen::MatrixXd const & vv, std::ostream & os,
-    std::string const & title, std::string const & prefix, bool nonl){
-    char const* nlornot("\n");
-    if (nonl) {
-        nlornot = "";
-    }
-    if (!title.empty()) {
-        os << title <<"(rows: " <<vv.rows() <<", cols: "<<vv.cols()<<")"<< nlornot;
-    }
-}
-
-void pretty_print(Eigen::VectorXd const& vv, std::ostream& os,
-                  std::string const& title, std::string const& prefix,
-                  bool nonl) {
-    pretty_print((Eigen::MatrixXd const&)vv, os, title, prefix, true, nonl);
-}
 
 void pretty_constructor(const int& _num_tab, const std::string& _name) {
     myColor color;
@@ -206,94 +113,7 @@ void color_print(const myColor& _color, const std::string& _name,
     printf("\033[0m");
 }
 
-void pretty_print(const std::vector<double>& _vec, const char* title) {
-    std::printf("%s: ", title);
-    for (int i(0); i < _vec.size(); ++i) {
-        std::printf("% 6.4f, \t", _vec[i]);
-    }
-    std::printf("\n");
-}
 
-void pretty_print(const std::vector<int>& _vec, const char* title) {
-    std::printf("%s: ", title);
-    for (int i(0); i < _vec.size(); ++i) {
-        std::printf("%d, \t", _vec[i]);
-    }
-    std::printf("\n");
-}
-
-void pretty_print(Eigen::MatrixXd const& mm, std::ostream& os,
-                  std::string const& title, std::string const& prefix,
-                  bool vecmode, bool nonl) {
-    char const* nlornot("\n");
-    if (nonl) {
-        nlornot = "";
-    }
-    if (!title.empty()) {
-        os << title <<"(rows: " <<mm.rows() <<", cols: "<<mm.cols()<<")"<< nlornot;
-    }
-    if ((mm.rows() <= 0) || (mm.cols() <= 0)) {
-        os << prefix << " (empty)" << nlornot;
-    } else {
-        // if (mm.cols() == 1) {
-        //   vecmode = true;
-        // }
-
-        if (vecmode) {
-            if (!prefix.empty()) os << prefix;
-            for (int ir(0); ir < mm.rows(); ++ir) {
-                os << pretty_string(mm.coeff(ir, 0));
-            }
-            os << nlornot;
-
-        } else {
-            for (int ir(0); ir < mm.rows(); ++ir) {
-                if (!prefix.empty()) os << prefix;
-                for (int ic(0); ic < mm.cols(); ++ic) {
-                    os << pretty_string(mm.coeff(ir, ic));
-                }
-                os << nlornot;
-            }
-        }
-    }
-}
-
-void pretty_print(Eigen::Vector3d const& vv, std::ostream& os,
-                  std::string const& title, std::string const& prefix,
-                  bool nonl) {
-    pretty_print((Eigen::MatrixXd const&)vv, os, title, prefix, true, nonl);
-}
-
-void pretty_print(Eigen::Quaternion<double> const& qq, std::ostream& os,
-                  std::string const& title, std::string const& prefix,
-                  bool nonl) {
-    Eigen::VectorXd wxyz = Eigen::VectorXd::Zero(4);
-    wxyz << qq.w(), qq.x(), qq.y(), qq.z();
-    pretty_print(wxyz, os, title, prefix, true, nonl);
-    // pretty_print(qq.coeffs(), os, title, prefix, true, nonl);
-}
-
-std::string pretty_string(Eigen::VectorXd const& vv) {
-    std::ostringstream os;
-    pretty_print(vv, os, "", "", true);
-    return os.str();
-}
-
-std::string pretty_string(Eigen::MatrixXd const& mm,
-                          std::string const& prefix) {
-    std::ostringstream os;
-    pretty_print(mm, os, "", prefix);
-    return os.str();
-}
-
-std::string pretty_string(double vv) {
-    static int const buflen(32);
-    static char buf[buflen];
-    memset(buf, 0, sizeof(buf));
-    snprintf(buf, buflen - 1, "% 6.6f  ", vv);
-    std::string str(buf);
-    return str;
-}
 
 
 void readFile(std::string _file_name, std::vector<std::string>& _vec) {
@@ -327,14 +147,15 @@ void splitString(std::string* str_array, std::string strTarget,
     }
 }
 
-bool isEqual(const Eigen::VectorXd a, const Eigen::VectorXd b,
-             const double threshold) {
-    bool ret(true);
-    for (int i = 0; i < a.size(); ++i) {
-        if ((a(i) - b(i)) > threshold || ((a(i) - b(i))) < -threshold) {
-            ret = false;
-        }
-    }
-    return ret;
-}
+// explicitly instatiate
+// template void pretty_print<double>(const std::vector<double>&, const char*);
+// template void pretty_print<float>(const std::vector<float>&, const char*);
+
+// template void pretty_print<float>(const Eigen::MatrixXf&, std::ostream& ,
+//                     const std::string&, const std::string& ,
+//                     bool, bool);
+// template void pretty_print<double>(const Eigen::MatrixXd&, std::ostream& ,
+//                     const std::string&, const std::string& ,
+//                     bool, bool);
+
 }  // namespace rossy_utils

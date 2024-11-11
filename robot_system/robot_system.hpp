@@ -16,23 +16,25 @@
 #include <pinocchio/fwd.hpp>
 #include <pinocchio/parsers/urdf.hpp>
 
+#include "rossy_utils/math/typedefs.h"
 
+template <typename Scalar>
 class RobotSystem {
    protected:
     // pinocchio system
-    pinocchio::Model model_;
-    pinocchio::Data data_;
+    pinocchio::ModelTpl<Scalar> model_;
+    pinocchio::DataTpl<Scalar> data_;
 
     std::string urdf_file_;
     bool b_print_info_;
 
     // generalized coordinate configuration
-    Eigen::VectorXd q_;
-    Eigen::VectorXd qdot_;
-    Eigen::VectorXd qddot_;
+    VectorX<Scalar> q_;
+    VectorX<Scalar> qdot_;
+    VectorX<Scalar> qddot_;
 
     // robot info
-    double total_mass_;
+    Scalar total_mass_;
     int n_q_;
     int n_qdot_;
     int n_dof_;
@@ -44,7 +46,7 @@ class RobotSystem {
     std::map<size_t, std::string> joint_idx_map_inv_; 
 
    public:
-    RobotSystem(const RobotSystem& robotsys); // copier
+    RobotSystem(const RobotSystem<Scalar>& robotsys); // copier
     RobotSystem(const std::string& file);
     virtual ~RobotSystem(void);
 
@@ -53,21 +55,21 @@ class RobotSystem {
     std::string_view getUrdfFile(){return urdf_file_;}
 
     // update fixed base system
-    void updateSystem(const Eigen::VectorXd &joint_pos,
-                    const Eigen::VectorXd &joint_vel);
+    void updateSystem(const VectorX<Scalar> &joint_pos,
+                    const VectorX<Scalar> &joint_vel);
 
-    Eigen::VectorXd getQ() { return q_; };
-    Eigen::VectorXd getQdot() { return qdot_; };
-    Eigen::VectorXd getQddot() { return qddot_; };
+    VectorX<Scalar> getQ() { return q_; };
+    VectorX<Scalar> getQdot() { return qdot_; };
+    VectorX<Scalar> getQddot() { return qddot_; };
 
-    Eigen::VectorXd GetTorqueLowerLimits() { return -model_.effortLimit;}
-    Eigen::VectorXd GetTorqueUpperLimits() { return model_.effortLimit;}
-    Eigen::VectorXd GetPositionLowerLimits() { return model_.lowerPositionLimit;}
-    Eigen::VectorXd GetPositionUpperLimits() { return model_.upperPositionLimit;} 
-    Eigen::VectorXd GetVelocityLowerLimits() { return -model_.velocityLimit;}
-    Eigen::VectorXd GetVelocityUpperLimits() { return model_.velocityLimit;}   
+    VectorX<Scalar> GetTorqueLowerLimits() { return -model_.effortLimit;}
+    VectorX<Scalar> GetTorqueUpperLimits() { return model_.effortLimit;}
+    VectorX<Scalar> GetPositionLowerLimits() { return model_.lowerPositionLimit;}
+    VectorX<Scalar> GetPositionUpperLimits() { return model_.upperPositionLimit;} 
+    VectorX<Scalar> GetVelocityLowerLimits() { return -model_.velocityLimit;}
+    VectorX<Scalar> GetVelocityUpperLimits() { return model_.velocityLimit;}   
     
-    double getRobotMass() { return total_mass_; }
+    Scalar getRobotMass() { return total_mass_; }
     int getNumDofs() { return n_qdot_; };
     int getNumBodyNodes() { return n_link_; };
 
@@ -76,28 +78,28 @@ class RobotSystem {
     std::string_view getLinkName(const int& frame_idx);
     std::string_view getJointName(const int& joint_idx); 
 
-    Eigen::MatrixXd getMassMatrix();
-    Eigen::MatrixXd getInvMassMatrix();
-    Eigen::VectorXd getCoriolisGravity();
-    Eigen::VectorXd getGravity();
-    Eigen::VectorXd getCoriolis();
-    Eigen::MatrixXd getCoriolisMatrix();
+    MatrixX<Scalar> getMassMatrix();
+    MatrixX<Scalar> getInvMassMatrix();
+    VectorX<Scalar> getCoriolisGravity();
+    VectorX<Scalar> getGravity();
+    VectorX<Scalar> getCoriolis();
+    MatrixX<Scalar> getCoriolisMatrix();
 
-    Eigen::Isometry3d getBodyNodeIsometry(const std::string& name_);
-    Eigen::Matrix<double, 6, 1> getBodyNodeSpatialVelocity(const std::string& name_);    
-    Eigen::MatrixXd getBodyNodeJacobian(const std::string& name_);
-    Eigen::VectorXd getBodyNodeJacobianDotQDot(const std::string& name_);
-    Eigen::Matrix<double, 6, 1> getBodyNodeBodyVelocity(const std::string& name_);
-    Eigen::MatrixXd getBodyNodeBodyJacobian(const std::string& name_);
-    Eigen::VectorXd getBodyNodeBodyJacobianDotQDot(const std::string& name_);
+    Isometry3<Scalar> getBodyNodeIsometry(const std::string& name_);
+    Eigen::Matrix<Scalar, 6, 1> getBodyNodeSpatialVelocity(const std::string& name_);    
+    MatrixX<Scalar> getBodyNodeJacobian(const std::string& name_);
+    VectorX<Scalar> getBodyNodeJacobianDotQDot(const std::string& name_);
+    Eigen::Matrix<Scalar, 6, 1> getBodyNodeBodyVelocity(const std::string& name_);
+    MatrixX<Scalar> getBodyNodeBodyJacobian(const std::string& name_);
+    VectorX<Scalar> getBodyNodeBodyJacobianDotQDot(const std::string& name_);
 
-    Eigen::Isometry3d getBodyNodeIsometry(const int& _bn_idx);
-    Eigen::Matrix<double, 6, 1> getBodyNodeSpatialVelocity(const int& _bn_idx);    
-    Eigen::MatrixXd getBodyNodeJacobian(const int& _bn_idx);
-    Eigen::VectorXd getBodyNodeJacobianDotQDot(const int& _bn_idx);
-    Eigen::Matrix<double, 6, 1> getBodyNodeBodyVelocity(const int& _bn_idx);
-    Eigen::MatrixXd getBodyNodeBodyJacobian(const int& _bn_idx);
-    Eigen::VectorXd getBodyNodeBodyJacobianDotQDot(const int& _bn_idx);
+    Isometry3<Scalar> getBodyNodeIsometry(const int& _bn_idx);
+    Eigen::Matrix<Scalar, 6, 1> getBodyNodeSpatialVelocity(const int& _bn_idx);    
+    MatrixX<Scalar> getBodyNodeJacobian(const int& _bn_idx);
+    VectorX<Scalar> getBodyNodeJacobianDotQDot(const int& _bn_idx);
+    Eigen::Matrix<Scalar, 6, 1> getBodyNodeBodyVelocity(const int& _bn_idx);
+    MatrixX<Scalar> getBodyNodeBodyJacobian(const int& _bn_idx);
+    VectorX<Scalar> getBodyNodeBodyJacobianDotQDot(const int& _bn_idx);
 
 
   private:
