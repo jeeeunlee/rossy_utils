@@ -4,6 +4,7 @@
 
 #define ZCE 1e-8
 #define INF 1e6
+#define MAXVAL 1e15-1
 
 
 namespace rossy_utils {
@@ -78,11 +79,17 @@ void EigenMatrix2PackedMat(const Eigen::MatrixXd& emat,
         packedMat.start_.push_back(idx);    
         for(int r(0); r<emat.rows(); ++r){                    
             if( std::abs(emat(r,c)) > ZCE)
-            {                
+            {
                 packedMat.index_.push_back(r);
-                packedMat.value_.push_back(emat(r,c));
+                if( std::abs(emat(r,c)) > MAXVAL){
+                    // std::cout<<"r="<<r<<",c="<<c<<", val="<<emat(r,c)<<std::endl;
+                    packedMat.value_.push_back(MAXVAL);
+                }
+                else{
+                    packedMat.value_.push_back(emat(r,c));
+                }                
                 idx ++;
-            }            
+            }
         }        
     }
     packedMat.start_.push_back(idx);    

@@ -10,6 +10,7 @@ cc_library(
     deps = [
         "@eigen", 
         "@highs",
+        # "@osqp",
         "//rossy_utils/thirdparty/yaml:yamlwrapper", 
         "//rossy_utils/thirdparty/cdd:myCdd",
     ],

@@ -5,7 +5,7 @@
 #include <cassert>
 
 #define ZCE 1e-8
-const double INF = std::numeric_limits<double>::infinity();
+const double INF = std::numeric_limits<float>::infinity();
 
 double rossy_utils::qpprog(Eigen::MatrixXd& G, Eigen::VectorXd& g0,
                       const Eigen::MatrixXd& CE, const Eigen::VectorXd& ce0,
