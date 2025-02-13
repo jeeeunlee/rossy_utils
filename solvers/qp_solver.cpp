@@ -1,8 +1,15 @@
 #include "qp_solver.hpp"
 #include "rossy_utils/thirdparty/goldfarb/QuadProg++.hh"
 #include "lp_solver.hpp"
+
 #include <Highs.h>
 #include <cassert>
+
+
+#include <OsqpEigen/OsqpEigen.h>
+
+
+
 
 #define ZCE 1e-8
 const double INF = std::numeric_limits<float>::infinity();
@@ -131,3 +138,176 @@ void rossy_utils::EigenMatrix2Hessian(const Eigen::MatrixXd& H,
     //     std::cout<< s << ", ";
     // std::cout<<std::endl;
 }
+
+float rossy_utils::qpprogOSQP(
+        Eigen::MatrixXf &Q, 
+        Eigen::VectorXf &q,
+        Eigen::MatrixXf &A, 
+        Eigen::VectorXf &b,
+        Eigen::VectorXf &x) {
+    int n = Q.rows(); // Number of variables
+    int m = A.rows(); // Number of constraints
+    x = Eigen::VectorXf::Zero(n);
+    if (m != b.rows()) {
+        std::cerr << "Error: A.rows() must match b.rows()!" << std::endl;
+        return -1.0f;
+    }
+
+    // Create an OSQP Solver instance
+    OsqpEigen::Solver solver;
+
+    // Set problem dimensions
+    solver.settings()->setVerbosity(false);
+    solver.settings()->setWarmStart(false);
+    solver.data()->setNumberOfVariables(n);
+    solver.data()->setNumberOfConstraints(m);
+
+    // Define sparse matrices (OSQP requires sparse format)
+    Q = 0.5 * (Q + Q.transpose());
+
+    Eigen::SparseMatrix<double> Q_sparse = Q.cast<double>().sparseView();
+    Eigen::SparseMatrix<double> A_sparse = A.cast<double>().sparseView();
+    Eigen::VectorXd lower_bound = Eigen::VectorXd::Constant(m, -1e17);
+    Eigen::VectorXd qdouble = q.cast<double>();
+    Eigen::VectorXd bdouble = b.cast<double>();
+    Eigen::VectorXd xdouble = x.cast<double>();
+
+    // Load data into solver
+    Q_sparse.makeCompressed();
+    A_sparse.makeCompressed();
+    if (!solver.data()->setHessianMatrix(Q_sparse) ||
+        !solver.data()->setGradient(qdouble) ||
+        !solver.data()->setLinearConstraintsMatrix(A_sparse) ||
+        !solver.data()->setLowerBound(lower_bound) ||
+        !solver.data()->setUpperBound(bdouble)) {
+        std::cout <<" set data "  << std::endl;
+        return -1.0f; 
+    }
+
+    // Initialize solver
+    solver.clearSolver();
+    if (!solver.initSolver()) {
+        std::cerr << " ##### OSQP Solver initialization failed!" << std::endl;
+        return -1.0f;
+    }
+    
+    // Solve the QP problem
+    if (solver.solveProblem() != OsqpEigen::ErrorExitFlag::NoError) {
+        return -1.0f;
+    }
+
+    // Get the optimal solution (convert back to float)
+    xdouble = solver.getSolution();
+    x = xdouble.cast<float>();
+    // Compute and return the optimal objective function value (float precision)
+    float ret = (0.5f * x.transpose() * Q * x + q.transpose() * x).value();
+    return ret;
+}
+
+
+
+// float rossy_utils::qpprogOSQP(Eigen::MatrixXf &Q, Eigen::VectorXf &q,
+//                  Eigen::MatrixXf &A, Eigen::VectorXf &b,
+//                  Eigen::VectorXf &x) {
+//     int n = Q.rows(); // Number of variables
+//     int m = A.rows(); // Number of constraints
+//     if (m != b.rows()) {
+//         std::cerr << "Error: A.rows() must match b.rows()!" << std::endl;
+//         return -1.0f;
+//     }
+
+//     // Create an OSQP Solver instance
+//     OsqpEigen::Solver solver;
+//     solver.clearSolver();
+
+//     // Set problem dimensions
+//     solver.settings()->setVerbosity(true);
+//     solver.settings()->setWarmStart(false);
+//     solver.data()->setNumberOfVariables(n);
+//     solver.data()->setNumberOfConstraints(m);
+
+//     std::cout <<" here 1 : m=" << m <<", n="<<n << std::endl;
+
+//     // Define sparse matrices (OSQP requires sparse format)
+//     Q = 0.5f * (Q + Q.transpose());
+
+//     // Check if Q is PSD
+//     Eigen::LLT<Eigen::MatrixXf> llt(Q);
+//     if (llt.info() != Eigen::Success) {
+//         std::cerr << "Error: Q is not positive semi-definite!" << std::endl;
+//         std::cout<<"Q(8,8) = " << Q.topLeftCorner(8,8) << std::endl;
+//         std::cout<<"Q(end,end) = " << Q.bottomRightCorner(1,1) << std::endl;
+//         return -1.0f;   
+//     }
+
+//     // Check for NaN or Inf values
+//     if (!Q.allFinite()) {
+//         std::cerr << "Error: Q contains NaN or Inf values!" << std::endl;
+//         return -1.0f;
+//     }
+
+//     // Ensure Q is square
+//     if (Q.rows() != Q.cols()) {
+//         std::cerr << "Error: Q must be square (n x n)!" << std::endl;
+//         return -1.0f;
+//     }
+
+//     Eigen::SparseMatrix<float> Q_sparse = Q.sparseView();
+//     Eigen::SparseMatrix<float> A_sparse = A.sparseView();
+//     Eigen::VectorXf lower_bound = Eigen::VectorXf::Constant(m, -OSQP_INFTY);
+
+//     std::cout <<" here 2 " << std::endl;
+
+//     // Load data into solver
+//     Q_sparse.makeCompressed();
+//     A_sparse.makeCompressed();
+//     if (!solver.data()->setHessianMatrix(Q_sparse)){
+//         std::cout <<" setHessianMatrix "  << std::endl;
+//         return -1.0f; 
+//     }
+//     std::cout <<" here 3 " << std::endl;
+//     if(!solver.data()->setGradient(q)){
+//         std::cout <<" setGradient "  << std::endl;
+//         return -1.0f; 
+//     }
+//     std::cout <<" here 4 " << std::endl;
+//     if(!solver.data()->setLinearConstraintsMatrix(A_sparse)){
+//         std::cout <<" setLinearConstraintsMatrix "  << std::endl;
+//         return -1.0f; 
+//     }
+//     std::cout <<" here 5 " << std::endl;
+//     if(!solver.data()->setLowerBound(lower_bound)){
+//         std::cout <<" setLowerBound "  << std::endl;
+//         return -1.0f; 
+//     }
+//     std::cout <<" here 6 " << std::endl;
+//     if(!solver.data()->setUpperBound(b)) {
+//         std::cout <<" setUpperBound "  << std::endl;
+//         return -1.0f; 
+//     }
+//     std::cout <<" here 7 " << std::endl;
+//     std::cout << "is set = " << solver.data()->isSet() << std::endl;
+
+//     std::cout << "m = " << solver.data()->getData()->m << std::endl;
+
+//     // Initialize solver
+//     if (!solver.initSolver()) {
+//         std::cerr << "OSQP Solver initialization failed!" << std::endl;
+//         return -1.0f;
+//     }
+//     std::cout <<" here 8 " << std::endl;
+
+//     solver.clearSolver();
+//     // Solve the QP problem
+//     if (solver.solveProblem() != OsqpEigen::ErrorExitFlag::NoError) {
+//         return -1.0f;
+//     }
+
+//     // Get the optimal solution (convert back to float)
+//     x = solver.getSolution();
+    
+//     // Compute and return the optimal objective function value (float precision)
+//     float ret = (0.5f * x.transpose() * Q * x + q.transpose() * x).value();
+//     return ret;
+// }
+

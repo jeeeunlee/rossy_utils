@@ -124,11 +124,13 @@ MatrixX<Scalar> dStack(const MatrixX<Scalar>& a, const MatrixX<Scalar>& b) {
 
 template <typename Scalar>
 VectorX<Scalar> MatrixtoVector(const MatrixX<Scalar>& a){
-    VectorX<Scalar> vec = VectorX<Scalar>::Zero(0);
-    for(int i(0); i<a.cols(); ++i){
-        vec = vStack(vec, (MatrixX<Scalar>)(a.col(i)));
-    }
-    return vec;
+    // VectorX<Scalar> vec = VectorX<Scalar>::Zero(0);
+    // for(int i(0); i<a.cols(); ++i){
+    //     vec = vStack(vec, (MatrixX<Scalar>)(a.col(i)));
+    // }
+    // return vec;
+    // colwise
+    return Eigen::Map<const Eigen::VectorX<Scalar>>(a.data(), a.size());
 };
 
 template <typename Scalar>

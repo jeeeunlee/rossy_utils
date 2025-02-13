@@ -15,10 +15,23 @@ namespace rossy_utils {
                 Eigen::VectorXd& x);
 
     // add qpsolver from HiGHS later
+    // f =   min 0.5 * x Q x + q x, where Q=Q'(symmetric, psd)
+    // s.t. _A x + <= _b 
+    // return f
     double qpprogHiGHS(const Eigen::MatrixXd & _Q, const Eigen::VectorXd & _q, 
                     const Eigen::MatrixXd & _A, const Eigen::VectorXd & _b, 
                     Eigen::VectorXd & _x);
 
     void EigenMatrix2Hessian(const Eigen::MatrixXd& H,
                             HighsHessian& hessian);
+
+    // add qpsolver from OSQP
+ 
+    float qpprogOSQP(Eigen::MatrixXf &Q, 
+                Eigen::VectorXf &q,
+                Eigen::MatrixXf &A, 
+                Eigen::VectorXf &b,
+                Eigen::VectorXf &x) ;
+    
+
 }
