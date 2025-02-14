@@ -9,7 +9,8 @@ cc_library(
         "include/yaml/*.h",
         "include/yaml/contrib/*.h",
         "include/yaml/node/*.h",
-        "include/yaml/node/detail/*.h",])],    
+        "include/yaml/node/detail/*.h",])],
+    includes = ["include/yaml"],
     deps = ["@eigen"],
     visibility = ["//visibility:public"],
 )
