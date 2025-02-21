@@ -7,9 +7,9 @@ namespace rossy_utils {
 
 void cleaningFile(std::string _file_name, std::string& _ret_file, bool b_param) {
     if (b_param)
-        _ret_file += THIS_COM;
+        _ret_file += CURRENT_DIR;
     else
-        _ret_file += THIS_COM "experiment_data/";
+        _ret_file += CURRENT_DIR "experiment_data/";
 
     _ret_file += _file_name;
     _ret_file += ".txt";

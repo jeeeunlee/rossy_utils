@@ -8,10 +8,7 @@
 #include <Eigen/Dense>
 #include <yaml/yaml.h>
 #include "rossy_utils/math/typedefs.h"
-
-// #include "rossy_utils/Configuration.h"
-// #define THIS_COM "/var/log/dex/dhc_data/"
-#define THIS_COM "~/my_ws/TrajOpt/src/rossy_utils"
+#include "Configuration.h"
 
 enum myColor {
     Red=0,

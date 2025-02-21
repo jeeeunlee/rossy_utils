@@ -13,6 +13,7 @@ cc_library(
         "@com_github_osqp_eigen//:osqp_eigen",
         "//rossy_utils/thirdparty/yaml:yamlwrapper", 
         "//rossy_utils/thirdparty/cdd:myCdd",
+        "//:gen_config",
     ],
     visibility = ["//visibility:public"],
 )
