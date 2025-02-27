@@ -65,7 +65,7 @@ namespace rossy_utils
     template <typename Scalar>
     void saveMatrix(const MatrixX<Scalar>& mtx_, std::string name_, bool b_param=false) {
         for(int j=0; j<mtx_.rows(); ++j)  {
-            saveVector(mtx_.row(j), name_ , b_param);
+            saveVector<Scalar>(mtx_.row(j), name_ , b_param);
         }
     };
 

@@ -1,6 +1,7 @@
 #include "qp_solver.hpp"
 // QuadProg
 #include "rossy_utils/thirdparty/goldfarb/QuadProg++.hh"
+#include "rossy_utils/io/io_utilities.hpp"
 // highs qp solver
 #include "lp_solver.hpp"
 #include <Highs.h>
@@ -154,6 +155,19 @@ float rossy_utils::qpprogOSQPSparse(
         std::cerr << "Error: A.rows() must match b.rows()!" << std::endl;
         return -1.0f;
     }
+    static int cnt = 0;
+    if(cnt == 0){
+        Eigen::MatrixXf Q_sparse_float = Q_sparse.cast<float>();
+        saveMatrix(Q_sparse_float, "Q_sparse");
+        saveVector(q, "q");
+        Eigen::MatrixXf A_sparse_float = A_sparse.cast<float>();
+        saveMatrix(A_sparse_float, "A_sparse");
+        saveVector(b, "b");
+        cnt ++;
+    }
+
+
+    // check if Q is psd
     Clock timer;
     timer.start();
 
