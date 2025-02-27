@@ -124,12 +124,6 @@ MatrixX<Scalar> dStack(const MatrixX<Scalar>& a, const MatrixX<Scalar>& b) {
 
 template <typename Scalar>
 VectorX<Scalar> MatrixtoVector(const MatrixX<Scalar>& a){
-    // VectorX<Scalar> vec = VectorX<Scalar>::Zero(0);
-    // for(int i(0); i<a.cols(); ++i){
-    //     vec = vStack(vec, (MatrixX<Scalar>)(a.col(i)));
-    // }
-    // return vec;
-    // colwise
     return Eigen::Map<const Eigen::VectorX<Scalar>>(a.data(), a.size());
 };
 
@@ -188,7 +182,8 @@ MatrixX<Scalar> kroneckerProduct(const MatrixX<Scalar> & A, const MatrixX<Scalar
         MatrixX<Scalar>::Zero(B.rows()*A.rows(), B.cols()*A.cols());
     for(int i(0); i<A.rows(); ++i){
         for(int j(0); j<A.cols(); ++j){
-            ret.block(i*B.rows(),j*B.cols(),B.rows(),B.cols()) = A(i,j)*B;
+            if( abs(A(i,j)) > 1e-6 )
+                ret.block(i*B.rows(),j*B.cols(),B.rows(),B.cols()) = A(i,j)*B;
         }
     }
     return ret;

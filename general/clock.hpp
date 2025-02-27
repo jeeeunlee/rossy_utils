@@ -4,7 +4,7 @@
 
 class Clock {
     public:
-        Clock(){}
+        Clock(){start();}
         ~Clock(){}
 
         void start() { ini_time_ = std::chrono::high_resolution_clock::now(); }

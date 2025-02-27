@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <Eigen/Dense>
+#include <Eigen/Sparse>
 
 class HighsHessian;
 
@@ -26,12 +27,19 @@ namespace rossy_utils {
                             HighsHessian& hessian);
 
     // add qpsolver from OSQP
- 
-    float qpprogOSQP(Eigen::MatrixXf &Q, 
-                Eigen::VectorXf &q,
-                Eigen::MatrixXf &A, 
-                Eigen::VectorXf &b,
-                Eigen::VectorXf &x) ;
+    float qpprogOSQPSparse(
+        Eigen::SparseMatrix<float> &Q_float, 
+        Eigen::VectorXf &q,
+        Eigen::SparseMatrix<float> &A_float, 
+        Eigen::VectorXf &b,
+        Eigen::VectorXf &x);
+
+    float qpprogOSQP(
+        Eigen::MatrixXf &Q, 
+        Eigen::VectorXf &q,
+        Eigen::MatrixXf &A, 
+        Eigen::VectorXf &b,
+        Eigen::VectorXf &x);
     
 
 }
