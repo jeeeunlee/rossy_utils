@@ -14,7 +14,7 @@ echo 'extern "C" {' >> $@
 echo '# endif /* ifdef __cplusplus */' >> $@
 echo '#include <limits.h> //for the QDLDL_INT_TYPE_MAX' >> $@
 echo 'typedef int QDLDL_int;   /* for indices */' >> $@
-echo 'typedef double QDLDL_float; /* for numerical values  */' >> $@
+echo 'typedef float QDLDL_float; /* for numerical values  */' >> $@
 echo 'typedef unsigned char QDLDL_bool;  /* for boolean values  */' >> $@
 echo '#define QDLDL_INT_MAX INT_MAX' >> $@
 echo '# ifdef __cplusplus' >> $@

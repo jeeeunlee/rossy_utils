@@ -5,6 +5,7 @@
 #include <Eigen/Sparse>
 
 class HighsHessian;
+namespace OsqpEigen{class Solver;};
 
 namespace rossy_utils {
     double qpprog(Eigen::MatrixXd& _G, Eigen::VectorXd& _g0,
@@ -25,21 +26,40 @@ namespace rossy_utils {
 
     void EigenMatrix2Hessian(const Eigen::MatrixXd& H,
                             HighsHessian& hessian);
+    // QPOASES
+    float qpprogQPOASES(const Eigen::MatrixXf& Q, 
+                    const Eigen::VectorXf& q,
+                    const Eigen::MatrixXf& A, 
+                    const Eigen::VectorXf& b,
+                    Eigen::VectorXf& x);
 
     // add qpsolver from OSQP
-    float qpprogOSQPSparse(
-        Eigen::SparseMatrix<float> &Q_float, 
-        Eigen::VectorXf &q,
-        Eigen::SparseMatrix<float> &A_float, 
-        Eigen::VectorXf &b,
-        Eigen::VectorXf &x);
+    class OSQPSolver{
+      public:
+        OSQPSolver();
+        ~OSQPSolver();           
 
-    float qpprogOSQP(
-        Eigen::MatrixXf &Q, 
-        Eigen::VectorXf &q,
-        Eigen::MatrixXf &A, 
-        Eigen::VectorXf &b,
-        Eigen::VectorXf &x);
+        float qpprogOSQPSparse(
+            Eigen::SparseMatrix<float> &Q_float, 
+            Eigen::VectorXf &q,
+            Eigen::SparseMatrix<float> &A_float, 
+            Eigen::VectorXf &b,
+            Eigen::VectorXf &x);
+
+        float qpprogOSQP(
+            Eigen::MatrixXf &Q, 
+            Eigen::VectorXf &q,
+            Eigen::MatrixXf &A, 
+            Eigen::VectorXf &b,
+            Eigen::VectorXf &x);
+      private:
+        OsqpEigen::Solver* solver_;
+        int n_;
+        int m_;
+        void saveProblem(const Eigen::SparseMatrix<float>& Q_float,
+            const Eigen::VectorXf& q,
+            const Eigen::SparseMatrix<float>& A_float,
+            const Eigen::VectorXf& b);
+    };
     
-
-}
+} // namespace rossy_utils
