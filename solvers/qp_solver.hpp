@@ -56,10 +56,21 @@ namespace rossy_utils {
         OsqpEigen::Solver* solver_;
         int n_;
         int m_;
+        std::vector<Eigen::Triplet<float>> A_triplets_old_;
+        std::vector<Eigen::Triplet<float>> A_triplets_new_;
+
         void saveProblem(const Eigen::SparseMatrix<float>& Q_float,
             const Eigen::VectorXf& q,
             const Eigen::SparseMatrix<float>& A_float,
             const Eigen::VectorXf& b);
+
+        void setTripletfromSparseMatrix(
+          const Eigen::SparseMatrix<float>& A, 
+          std::vector<Eigen::Triplet<float>> &A_triplets);
+
+        bool isPatternChanged(
+          const std::vector<Eigen::Triplet<float>>& A_old,
+          const std::vector<Eigen::Triplet<float>>& A_new);
     };
     
 } // namespace rossy_utils

@@ -210,6 +210,7 @@ void OSQPSolver::saveProblem(
     saveVector(b, "b");   
 }
 
+
 float OSQPSolver::qpprogOSQPSparse(
         Eigen::SparseMatrix<float>& Q_sparse,
         Eigen::VectorXf& q,
@@ -225,20 +226,42 @@ float OSQPSolver::qpprogOSQPSparse(
     // Set problem dimensions
     solver_->data()->setNumberOfVariables(n);
     solver_->data()->setNumberOfConstraints(m);
+    Eigen::VectorXf lower_bound = Eigen::VectorXf::Constant(m, -1e17f);
     // timer.printElapsedMiliSec("OSQP: setting = ");
 
-    // Define sparse matrices (OSQP requires sparse format)
-    // Eigen::SparseMatrix<double> Q_double = Q_sparse.cast<double>();
-    // Eigen::SparseMatrix<double> A_double = A_sparse.cast<double>();
-    // Eigen::VectorXd lower_bound = Eigen::VectorXd::Constant(m, -1e17);
-    // Eigen::VectorXd qdouble = q.cast<double>();
-    // Eigen::VectorXd bdouble = b.cast<double>();
-    // Eigen::VectorXd xdouble = x.cast<double>();
-    // timer.printElapsedMiliSec("OSQP: cast  = ");
-    Eigen::VectorXf lower_bound = Eigen::VectorXf::Constant(m, -1e17);
-
     // Load data into solver 
-    if(n_!=n || m_!=m){
+    if(n_==n || m_==m || solver_->isInitialized()){
+        // set triplet from sparse matrix
+    A_triplets_old_ = A_triplets_new_;
+    setTripletfromSparseMatrix(A_sparse, A_triplets_new_);
+
+    if(isPatternChanged(A_triplets_old_, A_triplets_new_)){
+        // std::cout <<"##### OSQP sparsity pattern changed!"  << std::endl;
+        solver_->data()->clearLinearConstraintsMatrix();
+        if(!solver_->data()->setLinearConstraintsMatrix(A_sparse) ||
+                !solver_->data()->setLowerBound(lower_bound) ||
+                !solver_->data()->setUpperBound(b) ||
+                !solver_->data()->setGradient(q)){
+            std::cout <<"##### OSQP set data failed!"  << std::endl;
+            return -1.0f;
+        } 
+
+        solver_->clearSolver();
+        if (!solver_->initSolver()) {
+            std::cerr << " ##### OSQP Solver initialization failed!" << std::endl;
+            return -1.0f;
+        } 
+    }        
+    else if (!solver_->updateGradient(q) ||
+            !solver_->updateUpperBound(b) ||
+            !solver_->updateLinearConstraintsMatrix(A_sparse)) {
+        // Assume Q_sparse and lower bound will be same
+        std::cout <<"##### OSQP update data failed!"  << std::endl;
+        return -1.0f; 
+    }
+
+    }
+    else{
         if(solver_->data()->isSet()){
             solver_->data()->clearLinearConstraintsMatrix();
             solver_->data()->clearHessianMatrix();
@@ -261,15 +284,9 @@ float OSQPSolver::qpprogOSQPSparse(
         // timer.printElapsedMiliSec("OSQP: init solver = ");
         n_ = n;
         m_ = m;
-    }else{
-        // Assume Q_sparse and lower bound will be same
-        if (!solver_->updateGradient(q) ||
-            !solver_->updateLinearConstraintsMatrix(A_sparse) ||
-            !solver_->updateUpperBound(b)) {
-            std::cout <<"##### OSQP update data failed!"  << std::endl;
-            return -1.0f; 
-        }
-    }  
+
+        setTripletfromSparseMatrix(A_sparse, A_triplets_new_);
+    }
         
 
     // Solve the QP problem
@@ -304,5 +321,31 @@ float OSQPSolver::qpprogOSQP(
     return qpprogOSQPSparse(Q_sparse, q, A_sparse, b, x);
 }
 
+void OSQPSolver::setTripletfromSparseMatrix(
+          const Eigen::SparseMatrix<float>& A, 
+          std::vector<Eigen::Triplet<float>> &A_triplets){
+    A_triplets.clear();
+    for(int i=0; i<A.outerSize(); ++i){
+        for(Eigen::SparseMatrix<float>::InnerIterator it(A,i); it; ++it){
+            A_triplets.emplace_back(it.row(), it.col(), it.value());
+        }
+    }
+}
+
+bool OSQPSolver::isPatternChanged(
+          const std::vector<Eigen::Triplet<float>>& A_old,
+          const std::vector<Eigen::Triplet<float>>& A_new){
+    if(A_old.size() != A_new.size()){
+        return true;
+    }
+    for (int i = 0; i < A_new.size(); i++)
+    {
+        // check if the sparsity pattern is changed
+        if ((A_new[i].row() != A_old[i].row())
+                || (A_new[i].col() != A_old[i].col()))
+            return true;
+    }
+    return false;
+}
 
 } // namespace rossy_utils
