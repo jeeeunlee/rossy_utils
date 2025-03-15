@@ -179,7 +179,7 @@ n_(0),m_(0) {
     solver_->settings()->setWarmStart(true);
     solver_->settings()->setAbsoluteTolerance(1e-3);
     solver_->settings()->setRelativeTolerance(1e-3);
-    solver_->settings()->setMaxIteration(200);
+    solver_->settings()->setMaxIteration(150);
     solver_->settings()->setPolish(false);
 
     // Settings for faster convergence
