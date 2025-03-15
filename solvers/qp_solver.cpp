@@ -179,13 +179,13 @@ n_(0),m_(0) {
     solver_->settings()->setWarmStart(true);
     solver_->settings()->setAbsoluteTolerance(1e-3);
     solver_->settings()->setRelativeTolerance(1e-3);
-    solver_->settings()->setMaxIteration(500);
+    solver_->settings()->setMaxIteration(200);
     solver_->settings()->setPolish(false);
 
     // Settings for faster convergence
-    // solver_->settings()->setAlpha(1.8);
-    // solver_->settings()->setRho(0.05);
-    // solver_->settings()->setSigma(1e-6);
+    solver_->settings()->setAlpha(1.8);
+    solver_->settings()->setRho(0.05);
+    solver_->settings()->setSigma(1e-6);
     // solver_->settings()->setPolish(true);
     // solver_->settings()->setPolishRefineIter(4);
 }
@@ -232,33 +232,32 @@ float OSQPSolver::qpprogOSQPSparse(
     // Load data into solver 
     if(n_==n || m_==m || solver_->isInitialized()){
         // set triplet from sparse matrix
-    A_triplets_old_ = A_triplets_new_;
-    setTripletfromSparseMatrix(A_sparse, A_triplets_new_);
-
-    if(isPatternChanged(A_triplets_old_, A_triplets_new_)){
-        // std::cout <<"##### OSQP sparsity pattern changed!"  << std::endl;
-        solver_->data()->clearLinearConstraintsMatrix();
-        if(!solver_->data()->setLinearConstraintsMatrix(A_sparse) ||
-                !solver_->data()->setLowerBound(lower_bound) ||
-                !solver_->data()->setUpperBound(b) ||
-                !solver_->data()->setGradient(q)){
-            std::cout <<"##### OSQP set data failed!"  << std::endl;
-            return -1.0f;
-        } 
-
-        solver_->clearSolver();
-        if (!solver_->initSolver()) {
-            std::cerr << " ##### OSQP Solver initialization failed!" << std::endl;
-            return -1.0f;
-        } 
-    }        
-    else if (!solver_->updateGradient(q) ||
-            !solver_->updateUpperBound(b) ||
-            !solver_->updateLinearConstraintsMatrix(A_sparse)) {
-        // Assume Q_sparse and lower bound will be same
-        std::cout <<"##### OSQP update data failed!"  << std::endl;
-        return -1.0f; 
-    }
+        // A_triplets_old_ = A_triplets_new_;
+        // setTripletfromSparseMatrix(A_sparse, A_triplets_new_);
+        // if(isPatternChanged(A_triplets_old_, A_triplets_new_)){
+        //     std::cout <<"##### OSQP sparsity pattern changed!"  << std::endl;
+        //     solver_->data()->clearLinearConstraintsMatrix();
+        //     if(!solver_->data()->setLinearConstraintsMatrix(A_sparse) ||
+        //             !solver_->data()->setLowerBound(lower_bound) ||
+        //             !solver_->data()->setUpperBound(b) ||
+        //             !solver_->data()->setGradient(q)){
+        //         std::cout <<"##### OSQP set data failed!"  << std::endl;
+        //         return -1.0f;
+        //     }
+        //     solver_->clearSolver();
+        //     if (!solver_->initSolver()) {
+        //         std::cerr << " ##### OSQP Solver initialization failed!" << std::endl;
+        //         return -1.0f;
+        //     } 
+        // }
+        // else 
+        if (!solver_->updateGradient(q) ||
+                !solver_->updateUpperBound(b) ||
+                !solver_->updateLinearConstraintsMatrix(A_sparse)) {
+            // Assume Q_sparse and lower bound will be same
+            std::cout <<"##### OSQP update data failed!"  << std::endl;
+            return -1.0f; 
+        }
 
     }
     else{
@@ -285,7 +284,7 @@ float OSQPSolver::qpprogOSQPSparse(
         n_ = n;
         m_ = m;
 
-        setTripletfromSparseMatrix(A_sparse, A_triplets_new_);
+        // setTripletfromSparseMatrix(A_sparse, A_triplets_new_);
     }
         
 
