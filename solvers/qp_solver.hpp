@@ -52,6 +52,8 @@ namespace rossy_utils {
             Eigen::MatrixXf &A, 
             Eigen::VectorXf &b,
             Eigen::VectorXf &x);
+        void reset();
+        
       private:
         OsqpEigen::Solver* solver_;
         int n_;

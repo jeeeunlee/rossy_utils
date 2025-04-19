@@ -197,6 +197,12 @@ OSQPSolver::~OSQPSolver() {
     }
 }
 
+void OSQPSolver::reset(){
+    n_ = 0;
+    m_ = 0;
+    solver_->clearSolver();
+}
+
 void OSQPSolver::saveProblem(
         const Eigen::SparseMatrix<float>& Q_sparse,
         const Eigen::VectorXf& q,
