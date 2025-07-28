@@ -2,9 +2,14 @@
 
 #include <chrono>
 
+
+// Uncomment the following line to enable the Timer functionality
+#define ROSSY_TIME
+
+#ifdef ROSSY_TIME
 class Clock {
     public:
-        Clock(){start();}
+        [[nodiscard]] Clock(){start();}
         ~Clock(){}
 
         void start() { ini_time_ = std::chrono::high_resolution_clock::now(); }
@@ -35,3 +40,19 @@ class Clock {
         std::chrono::microseconds duration_;
         std::chrono::high_resolution_clock::time_point ini_time_, end_time_;
 };
+#else
+// Empty Clock class when ENABLE_TIMER is not defined
+class Clock {
+    public:
+        [[nodiscard]] Clock(){}
+        ~Clock(){}
+        void start() {}
+        // return in milliseconds
+        double stop() const { return 0.0; }
+        void printElapsedSec(const std::string_view message){}
+        void printElapsedMiliSec(const std::string_view message){}
+        void printElapsedMicroSec(const std::string_view message){}
+
+};
+#endif  // ENABLE_TIMER
+

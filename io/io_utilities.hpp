@@ -6,9 +6,14 @@
 #include <algorithm>
 #include <list>
 #include <Eigen/Dense>
+#include <vector>
+#include <string_view>
 #include <yaml/yaml.h>
 #include "rossy_utils/math/typedefs.h"
 #include "Configuration.h"
+
+#define ROSSY_DEBUG 1  // or 1
+#define ROSSY_PRINT 1  // or 1
 
 enum myColor {
     Red=0,
@@ -27,13 +32,14 @@ enum myColor {
 
 namespace rossy_utils
 {
+
     const std::string border = "================================================================================";
     
     // =========================================================================
     // Save Vector
     // =========================================================================
     static std::list< std::string > gs_fileName_string; //global & static
-    void cleaningFile(std::string _file_name, std::string& _ret_file, bool b_param) ;
+    void cleaningFile(std::string _file_name, std::string& _ret_file, bool b_param);
     
     template <typename Scalar>
     void saveVector(const VectorX<Scalar>& vec_, std::string name_, bool b_param=false) {
@@ -248,5 +254,62 @@ namespace rossy_utils
     void pretty_constructor(const int& _num_tab, const std::string& _name);
     void color_print(const myColor & _color, const std::string& _name, bool line_change=true);
 
+    // =========================================================================
+
+    inline std::ostream& debug_stream() {
+    #if ROSSY_DEBUG
+        return std::cout;
+    #else
+        static std::ofstream null_stream("/dev/null");  // discards output on Linux
+        return null_stream;
+    #endif
+    }
+
+    #if ROSSY_PRINT
+
+    // -------------------------------
+    // Eigen Matrix or Vector
+    // -------------------------------
+    template<typename Derived,
+    typename std::enable_if<std::is_base_of<Eigen::EigenBase<Derived>, Derived>::value>::type>
+    inline void save_to_bin(const std::string& filename, const Derived& data) {
+        std::string full_path = LOG_DIR + filename;
+        std::ofstream file(full_path, std::ios::binary);
+        file.write(reinterpret_cast<const char*>(data.derived().data()), data.size() * sizeof(float));
+        file.close();
+    }
+
+    // -------------------------------
+    // std::vector<T> (float or uint)
+    template<typename T,
+    typename std::enable_if<std::is_same<T, float>::value || std::is_same<T, double>::value || std::is_same<T, uint>::value>::type>
+    inline void save_to_bin(const std::string& filename, const std::vector<T>& vec) {
+        std::string full_path = LOG_DIR + filename;
+        std::ofstream file(full_path, std::ios::binary);
+        file.write(reinterpret_cast<const char*>(vec.data()), vec.size() * sizeof(T));
+        file.close();
+    }
+
+    // -------------------------------
+    // Scalar float
+    template<typename T,
+    typename std::enable_if<std::is_same<T, float>::value || std::is_same<T, double>::value>::type>
+    inline void save_to_bin(const std::string& filename, T value) {
+        std::string full_path = LOG_DIR + filename;
+        std::ofstream file(full_path, std::ios::binary);
+        file.write(reinterpret_cast<const char*>(&value), sizeof(T));
+        file.close();
+    }
+
+    #else
+
+    // If ROSSY_PRINT is 0, make them no-ops
+    template<typename... Args>
+    void save_to_bin(const Args&...) {}
+
+    #endif // ROSSY_PRINT
 
 } /* rossy_utils */
+
+
+

@@ -3,10 +3,9 @@ load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library", "cc_test")
 cc_library(
     name = "rossy_utils",
     srcs = [file for file in glob([
-        "io/*.cpp", "math/*.cpp", "solvers/*.cpp", "thirdparty/goldfarb/*.cc"])], # "general/*.cpp", ,"math/*.cpp"
+        "io/*.cpp", "math/*.cpp", "solvers/*.cpp", "thirdparty/goldfarb/*.cc"])], 
     hdrs = [file for file in glob([
-        "io/*.hpp", "math/*.hpp", "math/*.h", "general/*.hpp", "solvers/*.hpp", "thirdparty/goldfarb/*.hh"])], # "general/*.hpp", ,"math/*.hpp"
-    # strip_include_prefix = "src/rossy_utils",
+        "io/*.hpp", "math/*.hpp", "math/*.h", "general/*.hpp", "solvers/*.hpp", "thirdparty/goldfarb/*.hh"])], 
     deps = [
         "@eigen", 
         "@highs",
@@ -22,10 +21,9 @@ cc_library(
 cc_library(
     name = "robot_system",
     srcs = [file for file in glob([
-        "robot_system/*.cpp"])], # "general/*.cpp", ,"math/*.cpp"
+        "robot_system/*.cpp"])], 
     hdrs = [file for file in glob([
-        "robot_system/*.hpp"])], # "general/*.hpp", ,"math/*.hpp"
-    # strip_include_prefix = "src/rossy_utils",
+        "robot_system/*.hpp"])], 
     deps = [
         "@eigen", 
         "@com_github_stack_of_tasks_pinocchio//:pinocchio", 
@@ -38,9 +36,9 @@ cc_library(
 # cc_library(
 #     name = "simple_viewer",
 #     srcs = [file for file in glob([
-#         "simple_viewer/*.cpp"])], # "general/*.cpp", ,"math/*.cpp"
+#         "simple_viewer/*.cpp"])], 
 #     hdrs = [file for file in glob([
-#         "simple_viewer/*.hpp"])], # "general/*.hpp", ,"math/*.hpp"
+#         "simple_viewer/*.hpp"])], 
 #     # strip_include_prefix = "src/rossy_utils",
 #     deps = [
 #         "@eigen", 
