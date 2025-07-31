@@ -12,7 +12,7 @@ def eigen_repository(
         version: version of the library to get.
         sha256: SHA-256 checksum of the downloaded archive.
     """
-    ver2sha = {"3.4.0":"1ccaabbfe870f60af3d6a519c53e09f3dcf630207321dffa553564a8e75c4fc8",
+    ver2sha = {"3.4.0":"eba3f3d414d2f8cba2919c78ec6daab08fc71ba2ba4ae502b7e5d4d99fc02cda",
                 "3.3.4":"b4415a2e16bbaff7568e52853c9e131633248c9bc66d565086e095087e95877d"}
     if(sha256 == ""):
         if version in ver2sha: 
