@@ -6,9 +6,7 @@
 namespace rossy_utils {
 
 void cleaningFile(std::string _file_name, std::string& _ret_file, bool b_param) {
-    if (b_param)
-        _ret_file += LOG_DIR;
-    else
+    if (!b_param)
         _ret_file += LOG_DIR "results/";
 
     _ret_file += _file_name;
